@@ -28,9 +28,9 @@ public class UserRegisterServlet extends LoginBaseServlet {
             throws IOException {
         prepareResponse("Register New User", response);
 
-        String newuser = request.getParameter("user");
-        String newpass = request.getParameter("pass");
-        Status status = dbhandler.registerUser(newuser, newpass);
+        String newUser = request.getParameter("user");
+        String newPass = request.getParameter("pass");
+        Status status = dbhandler.registerUser(newUser, newPass);
 
         if(status == Status.OK) {
             response.sendRedirect(response.encodeRedirectURL("/login?newuser=true"));

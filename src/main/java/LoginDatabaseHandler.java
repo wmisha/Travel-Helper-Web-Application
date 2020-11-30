@@ -291,6 +291,13 @@ public class LoginDatabaseHandler {
 			log.debug(status);
 			return status;
 		}
+		// validate the password at backend!
+		System.out.println("password: " + newpass);
+       if(!validatePassword(newpass)) {
+		   System.out.println("the password is invalid!");
+		   return status;
+	   }
+
 
 		// try to connect to database and test for duplicate user
 		System.out.println(db);
@@ -311,6 +318,19 @@ public class LoginDatabaseHandler {
 		}
 
 		return status;
+	}
+
+	/**
+	 * This method is used for validate the password that user input;
+	 * the password has to be between 5 to 10 characters, contains at least  one number,
+	 * one letter and one special character.
+	 * @param password
+	 * @return
+	 */
+	private boolean validatePassword(String password){
+
+		return password.matches("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=])(?=\\S+$).{3,10}$");
+
 	}
 
 	/**
