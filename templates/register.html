@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>Register New User</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+#if($errorMessage != "")
+<p style="color: red;">$errorMessage</p>
+#end
+<form action="/register" method="post">
+    <table border="0">
+        <tr>
+            <td>Usename:</td>
+            <td><input type="text" name="user" size="30"></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input type="password" name="pass" size="30"></td>
+        </tr>
+    </table>
+    <p><input type="submit" value="Register"></p>
+</form>
+
+<p style="font-size: 10pt; font-style: italic;">Last updated at 12:35 AM on Mon, Nov 30, 2020.</p>
+
+</body>
+</html>

@@ -4,12 +4,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class UserRegisterServlet extends LoginBaseServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        prepareResponse("Register New User", response);
+        //prepareResponse("Register New User", response);
 
         PrintWriter out = response.getWriter();
         String error = request.getParameter("error");
@@ -19,8 +22,19 @@ public class UserRegisterServlet extends LoginBaseServlet {
             out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
         }
 
-        printForm(out);
-        finishResponse(response);
+        /*
+        VelocityContext context = new ;
+
+        String errorMessage == "";
+        if (error != null) {
+            errorMessage = getStatusMessage(error);
+        }
+        context.put("errorMessage", errorMessage);
+        */
+
+        String content = new String(Files.readAllBytes(Paths.get("templates/register.html")));
+        out.print(content);
+        //finishResponse(response);
     }
 
     @Override
@@ -41,7 +55,7 @@ public class UserRegisterServlet extends LoginBaseServlet {
             response.sendRedirect(url);
         }
     }
-
+/*
     private void printForm(PrintWriter out) {
         assert out != null;
 
@@ -59,4 +73,5 @@ public class UserRegisterServlet extends LoginBaseServlet {
         out.println("<p><input type=\"submit\" value=\"Register\"></p>");
         out.println("</form>");
     }
+    */
 }
