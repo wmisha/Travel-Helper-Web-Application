@@ -1,4 +1,4 @@
-
+package server;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;

@@ -1,4 +1,4 @@
-
+package server;
 
 
 /**
@@ -18,27 +18,27 @@ public class StatusTester {
 	public static void main(String[] args) {
 
 		/*
-		 * Format string for outputting the Status enum name, ordinal,
+		 * Format string for outputting the server.Status enum name, ordinal,
 		 * and message.
 		 */
 		String format = "%s (%02d): %s%n";
 
-		// Prints all of the defined Status enum types.
+		// Prints all of the defined server.Status enum types.
 		for (Status s : Status.values()) {
 			System.out.printf(format, s.name(), s.ordinal(), s.message());
 		}
 
 		System.out.println();
 
-		// Create a Status enum type directly and display its info.
+		// Create a server.Status enum type directly and display its info.
 		Status s = Status.OK;
 		System.out.printf(format, s.name(), s.ordinal(), s.message());
 
-		// Create a Status enum type from its name.
+		// Create a server.Status enum type from its name.
 		s = Status.valueOf("ERROR");
 		System.out.printf(format, s.name(), s.ordinal(), s.message());
 
-		// Create a Status enum type from its ordinal.
+		// Create a server.Status enum type from its ordinal.
 		s = Status.values()[2];
 		System.out.printf(format, s.name(), s.ordinal(), s.message());
 

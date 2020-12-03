@@ -1,3 +1,4 @@
+package server;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -5,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.sql.*;
 import java.util.Random;
@@ -150,7 +150,7 @@ public class LoginDatabaseHandler {
 	 *
 	 * @param connection - active database connection
 	 * @param user - username to check
-	 * @return Status.OK if user does not exist in database
+	 * @return server.Status.OK if user does not exist in database
 	 * @throws SQLException
 	 */
 	private Status duplicateUser(Connection connection, String user) {
@@ -181,7 +181,7 @@ public class LoginDatabaseHandler {
 	 *
 	 * @see #duplicateUser(Connection, String)
 	 * @param user - username to check
-	 * @return Status.OK if user does not exist in database
+	 * @return server.Status.OK if user does not exist in database
 	 */
 	public Status duplicateUser(String user) {
 		Status status = Status.ERROR;
@@ -456,7 +456,7 @@ public class LoginDatabaseHandler {
 	 *
 	 * @param username - username to remove
 	 * @param password - password of user
-	 * @return Status.OK if removal successful
+	 * @return server.Status.OK if removal successful
 	 */
 	public Status removeUser(String username, String password) {
 

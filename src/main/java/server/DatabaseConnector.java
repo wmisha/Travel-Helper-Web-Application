@@ -1,4 +1,4 @@
-
+package server;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -168,7 +168,7 @@ public class DatabaseConnector {
 	public static void main(String[] args) {
 //		try {
 //		    // TODO Change to database.properties (or whatever you named your properties file)!
-//			DatabaseConnector test = new DatabaseConnector("database.properties");
+//			server.DatabaseConnector test = new server.DatabaseConnector("database.properties");
 //			System.out.println("Connecting to " + test.uri);
 //
 //			if (test.testConnection()) {

@@ -1,8 +1,8 @@
-
+package server;
 
 
 /**
- * Creates a Status enum type for tracking errors. Each Status enum type
+ * Creates a server.Status enum type for tracking errors. Each server.Status enum type
  * will use the ordinal as the error code, and store a message describing
  * the error.
  * Example of Prof. Engle
@@ -11,8 +11,8 @@
 public enum Status {
 
 	/*
-	 * Creates several Status enum types. The Status name and message is
-	 * given in the NAME(message) format below. The Status ordinal is
+	 * Creates several server.Status enum types. The server.Status name and message is
+	 * given in the NAME(message) format below. The server.Status ordinal is
 	 * determined by its position in the list. (For example, OK is the
 	 * first element, and will have ordinal 0.)
 	 */
