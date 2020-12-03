@@ -166,23 +166,23 @@ public class DatabaseConnector {
 	 * @param args unused
 	 */
 	public static void main(String[] args) {
-		try {
-		    // TODO Change to database.properties (or whatever you named your properties file)!
-			DatabaseConnector test = new DatabaseConnector("database.properties");
-			System.out.println("Connecting to " + test.uri);
-
-			if (test.testConnection()) {
-				System.out.println("Connection to database established.");
-				
-				
-			}
-			else {
-				System.err.println("Unable to connect properly to database.");
-			}
-		}
-		catch (Exception e) {
-			System.err.println("Unable to connect properly to database.");
-			System.err.println(e.getMessage());
-		}
+//		try {
+//		    // TODO Change to database.properties (or whatever you named your properties file)!
+//			DatabaseConnector test = new DatabaseConnector("database.properties");
+//			System.out.println("Connecting to " + test.uri);
+//
+//			if (test.testConnection()) {
+//				System.out.println("Connection to database established.");
+//
+//
+//			}
+//			else {
+//				System.err.println("Unable to connect properly to database.");
+//			}
+//		}
+//		catch (Exception e) {
+//			System.err.println("Unable to connect properly to database.");
+//			System.err.println(e.getMessage());
+//		}
 	}
 }

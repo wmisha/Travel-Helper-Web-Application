@@ -5,21 +5,39 @@
 <head>
     <title>$title</title>
     <meta charset="utf-8">
+    <script>
+        function validatePassword(password) {
+        document.getElementById('validation').innerHTML = 'Hi, I\'m going to validate your password! You typed: ' + password;
+
+            var pattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=])(?=\\S+$).{3,10}$/;
+            if(pattern.test(password)){
+                document.getElementById('validation').innerHTML = 'Valid Password !';
+                //return true;
+            }else{
+                document.getElementById('validation').innerHTML = ('Invalid password: at least one letter, one number, one special character.');
+                //return false;
+            }
+        }
+</script>
+
+
 </head>
 
 <body>
 #if($errorMessage != "")
 <p style="color: red;">$errorMessage</p>
 #end
+
+<p style="color: blue;" id="validation"></p>
 <form action="/register" method="post">
     <table border="0">
         <tr>
-            <td>Usename:</td>
+            <td>Username:</td>
             <td><input type="text" name="user" size="30"></td>
         </tr>
         <tr>
             <td>Password:</td>
-            <td><input type="password" name="pass" size="30"></td>
+            <td><input type="password" size="30" onkeyup="validatePassword(this.value);" name="pass" ></td>
         </tr>
     </table>
     <p><input type="submit" value="Register"></p>
