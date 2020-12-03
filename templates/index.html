@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title>Welcome Page</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -14,9 +14,11 @@
 
     <nav class="navbar navbar-expand-sm bg-light justify-content-center">
         <!-- Brand/logo -->
+        <!--
             <a class="navbar-brand" href="#">
-                <img src="sf.jpg" alt="logo" style="width:40px;">
+                <img src="$sf" alt="logo" style="width:40px;">
             </a>
+        -->
         <!-- Links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -40,7 +42,9 @@
     <h1>Welcome to this Website!</h1>
     <p>This part is inside a .container class.</p>
     <p>The .container class provides a responsive fixed width container.</p>
-    <a href="localhost:8080/register" class="btn btn-info" role="button">Register</a>
+    <a href="http://localhost:8090/register" class="btn btn-info" role="button">Register</a>
+    <a href="http://localhost:8090/login" class="btn btn-info" role="button">Login</a>
+    <a href="http://localhost:8090/login?logout" class="btn btn-info" role="button">Logout</a>
     <button type="button" class="btn btn-outline-primary">Register</button>
     <button type="button" class="btn btn-outline-success">Login</button>
 
@@ -48,7 +52,7 @@
 </div>
 
 <div class="container pt-3 my-3 ">
-    <img src="hotel.jpeg" class="rounded" alt="Cinque Terre" width="450" height="350">
+    <img src="$hotelPhoto" class="rounded" alt="Cinque Terre" width="450" height="350">
 </div>
 
 </body>
