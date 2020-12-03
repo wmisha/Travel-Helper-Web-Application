@@ -1,11 +1,17 @@
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+
 import javax.servlet.http.HttpServlet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class UserRegisterServlet extends LoginBaseServlet {
     @Override
@@ -17,10 +23,7 @@ public class UserRegisterServlet extends LoginBaseServlet {
         PrintWriter out = response.getWriter();
         String error = request.getParameter("error");
 
-        if(error != null) {
-            String errorMessage = getStatusMessage(error);
-            out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
-        }
+
 
         /*
         VelocityContext context = new ;
@@ -31,9 +34,23 @@ public class UserRegisterServlet extends LoginBaseServlet {
         }
         context.put("errorMessage", errorMessage);
         */
+        VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
+        VelocityContext context = new VelocityContext();
 
-        String content = new String(Files.readAllBytes(Paths.get("templates/register.html")));
-        out.print(content);
+        Template template = ve.getTemplate("templates/register.html");
+        // Comment the line above and uncomment the line below for a more complex template:
+        //Template template = ve.getTemplate("templates/travelAdvisor.html");
+        String errorMessage = "";
+        if(error != null)
+             errorMessage= getStatusMessage(error);
+
+        context.put("errorMessage", errorMessage);
+        StringWriter writer = new StringWriter();
+        template.merge(context, writer);
+        out.println(writer.toString());
+
+        //String content = new String(Files.readAllBytes(Paths.get("templates/register.html")));
+        //out.print(content);
         //finishResponse(response);
     }
 
@@ -55,23 +72,4 @@ public class UserRegisterServlet extends LoginBaseServlet {
             response.sendRedirect(url);
         }
     }
-/*
-    private void printForm(PrintWriter out) {
-        assert out != null;
-
-        out.println("<form action=\"/register\" method=\"post\">");
-        out.println("<table border=\"0\">");
-        out.println("\t<tr>");
-        out.println("\t\t<td>Usename:</td>");
-        out.println("\t\t<td><input type=\"text\" name=\"user\" size=\"30\"></td>");
-        out.println("\t</tr>");
-        out.println("\t<tr>");
-        out.println("\t\t<td>Password:</td>");
-        out.println("\t\t<td><input type=\"password\" name=\"pass\" size=\"30\"></td>");
-        out.println("</tr>");
-        out.println("</table>");
-        out.println("<p><input type=\"submit\" value=\"Register\"></p>");
-        out.println("</form>");
-    }
-    */
 }
