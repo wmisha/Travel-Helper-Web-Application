@@ -256,12 +256,12 @@ public class LoginDatabaseHandler {
 		String passhash = getHash(newpass, usersalt);
 
 		try (
-                PreparedStatement statement = connection.prepareStatement(REGISTER_SQL);
+                PreparedStatement sql = connection.prepareStatement(REGISTER_SQL);
         ) {
-			statement.setString(1, newuser);
-			statement.setString(2, passhash);
-			statement.setString(3, usersalt);
-			statement.executeUpdate();
+			sql.setString(1, newuser);
+			sql.setString(2, passhash);
+			sql.setString(3, usersalt);
+			sql.executeUpdate();
 
 			status = Status.OK;
 		}

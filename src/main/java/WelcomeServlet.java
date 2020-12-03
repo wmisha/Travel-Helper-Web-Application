@@ -37,11 +37,7 @@ public class WelcomeServlet extends LoginBaseServlet {
 		template.merge(context, writer);
 
 		if (name != null) {
-			//out.println("<p>Hello " + user + "!</p>");
-			//out.println("<p><a href=\"/login?logout\">(logout)</a></p>");
 			out.println(writer.toString());
-
-			//finishResponse(response);
 		}
 		else {
 			response.sendRedirect("/login");

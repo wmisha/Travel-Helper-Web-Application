@@ -43,10 +43,12 @@ public class UserLoginServlet extends LoginBaseServlet {
             out.println("<p>Registration was successful! Please login in.</p>");
             out.println(writer.toString());
         }
-
-        if (request.getParameter("logout") != null) {
+        else if (request.getParameter("logout") != null) {
             clearCookies(request, response);
             out.println("<p>Successfully logged out.</p>");
+            out.println(writer.toString());
+        }else{
+            out.println("<p>Already has account: </p>");
             out.println(writer.toString());
         }
     }
