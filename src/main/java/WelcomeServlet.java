@@ -1,9 +1,14 @@
 
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Handles display of user information.
@@ -16,17 +21,27 @@ public class WelcomeServlet extends LoginBaseServlet {
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-		String user = getUsername(request);
+		PrintWriter out = response.getWriter();
 
-		if (user != null) {
-			prepareResponse("Welcome", response);
+		String title = "Welcome";
+		String name = getUsername(request);
+		String date = getDate();
 
-			PrintWriter out = response.getWriter();
-			out.println("<p>Hello " + user + "!</p>");
-			out.println("<p><a href=\"/login?logout\">(logout)</a></p>");
+		VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
+		VelocityContext context = new VelocityContext();
+		Template template = ve.getTemplate("templates/welcome.html");
+		context.put("title",title);
+		context.put("name", name);
+		context.put("date",date);
+		StringWriter writer = new StringWriter();
+		template.merge(context, writer);
 
+		if (name != null) {
+			//out.println("<p>Hello " + user + "!</p>");
+			//out.println("<p><a href=\"/login?logout\">(logout)</a></p>");
+			out.println(writer.toString());
 
-			finishResponse(response);
+			//finishResponse(response);
 		}
 		else {
 			response.sendRedirect("/login");

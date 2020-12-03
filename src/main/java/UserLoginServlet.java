@@ -76,23 +76,4 @@ public class UserLoginServlet extends LoginBaseServlet {
         }
     }
 
-    private void printForm(PrintWriter out) {
-        assert out != null;
-
-        out.println("<form action=\"/login\" method=\"post\">");
-        out.println("<table border=\"0\">");
-        out.println("\t<tr>");
-        out.println("\t\t<td>Usename:</td>");
-        out.println("\t\t<td><input type=\"text\" name=\"user\" size=\"30\"></td>");
-        out.println("\t</tr>");
-        out.println("\t<tr>");
-        out.println("\t\t<td>Password:</td>");
-        out.println("\t\t<td><input type=\"password\" name=\"pass\" size=\"30\"></td>");
-        out.println("</tr>");
-        out.println("</table>");
-        out.println("<p><input type=\"submit\" value=\"Login\"></p>");
-        out.println("</form>");
-
-        out.println("<p>(<a href=\"/register\">new user? register here.</a>)</p>");
-    }
 }
