@@ -1,41 +1,54 @@
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public class UserLoginServlet extends LoginBaseServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        prepareResponse("Login", response);
-        PrintWriter out = response.getWriter();
-        String error = request.getParameter("error");
-        int code = 0;
 
+        PrintWriter out = response.getWriter();
+
+        String title = "Login";
+        String date = getDate();
+        String error = request.getParameter("error");
+        String errorMessage = "";
+        int code = 0;
         if (error != null) {
             try {
                 code = Integer.parseInt(error);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 code = -1;
             }
-
-            String errorMessage = getStatusMessage(code);
-            out.println("<p style=\"color: red;\">" + errorMessage + "</p>");
+            errorMessage = getStatusMessage(code);
         }
 
+        VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
+        VelocityContext context = new VelocityContext();
+        Template template = ve.getTemplate("templates/login.html");
+        context.put("title",title);
+        context.put("errorMessage", errorMessage);
+        context.put("date",date);
+        StringWriter writer = new StringWriter();
+        template.merge(context, writer);
+
         if (request.getParameter("newuser") != null) {
-            out.println("<p>Registration was successful!");
-            out.println("Login with your new username and password below.</p>");
+            out.println("<p>Registration was successful! Please login in.</p>");
+            out.println(writer.toString());
         }
 
         if (request.getParameter("logout") != null) {
             clearCookies(request, response);
             out.println("<p>Successfully logged out.</p>");
+            out.println(writer.toString());
         }
-
-        printForm(out);
-        finishResponse(response);
     }
 
     @Override

@@ -18,40 +18,29 @@ public class UserRegisterServlet extends LoginBaseServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        //prepareResponse("Register New User", response);
-
         PrintWriter out = response.getWriter();
+        String title = "Register New User";
         String error = request.getParameter("error");
-
-
-
-        /*
-        VelocityContext context = new ;
-
-        String errorMessage == "";
-        if (error != null) {
-            errorMessage = getStatusMessage(error);
-        }
-        context.put("errorMessage", errorMessage);
-        */
-        VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
-        VelocityContext context = new VelocityContext();
-
-        Template template = ve.getTemplate("templates/register.html");
-        // Comment the line above and uncomment the line below for a more complex template:
-        //Template template = ve.getTemplate("templates/travelAdvisor.html");
         String errorMessage = "";
         if(error != null)
              errorMessage= getStatusMessage(error);
+        String date = getDate();
 
+
+        VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
+        VelocityContext context = new VelocityContext();
+        Template template = ve.getTemplate("templates/register.html");
+
+        context.put("title",title);
         context.put("errorMessage", errorMessage);
+        context.put("date",date);
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
         out.println(writer.toString());
 
         //String content = new String(Files.readAllBytes(Paths.get("templates/register.html")));
         //out.print(content);
-        //finishResponse(response);
+
     }
 
     @Override
