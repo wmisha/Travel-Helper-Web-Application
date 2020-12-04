@@ -25,13 +25,6 @@ import java.util.TreeMap;
  * and take instructor's / TA's feedback from a code review into account.
  * Please download the input folder from Canvas.
  */
-//public class HotelSearch {
-//    public static void main(String[] args) {
-//       // FILL IN CODE
-//
-//    }
-//
-//}
 public class HotelSearch {
 
     public static Map<String, String> map;

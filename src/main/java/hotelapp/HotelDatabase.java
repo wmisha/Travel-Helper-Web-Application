@@ -1,8 +1,7 @@
 package hotelapp;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
+import org.eclipse.jetty.util.HostMap;
 
 import java.time.OffsetDateTime;
 import java.util.*;
@@ -25,6 +24,7 @@ public class HotelDatabase {
             this.frequency = frequency;
             this.reviewTime = reviewTime;
         }
+
         public Review getReview(){
             return review;
         }
@@ -41,10 +41,54 @@ public class HotelDatabase {
             return -date.compareTo(dateOther);
         }
     }
+    protected class HotelMapEntry implements Comparable<HotelMapEntry>{
+        private String hotelId;
+        private String hotelName;
+        private int averageRating;
+
+        public HotelMapEntry(String hotelId, String hotelName, int averageRating) {
+            this.hotelId = hotelId;
+            this.hotelName = hotelName;
+            this.averageRating = averageRating;
+        }
+
+        public int getAverageRating(){
+            return averageRating;
+        }
+
+        public String getHotelId() {
+            return hotelId;
+        }
+
+        public String getHotelName() {
+            return hotelName;
+        }
+
+        @Override
+        public int compareTo(HotelMapEntry o) {
+            return this.averageRating - o.averageRating;
+        }
+
+        public String putHotelMapEntryInJson(){
+            JsonObject jsonObject = new JsonObject();
+            String jsonInString = "";
+
+            jsonObject.addProperty("hotelId",getHotelId());
+            jsonObject.addProperty("name", getHotelName());
+            jsonObject.addProperty("rating", getAverageRating());
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonElement jsonElement = gson.toJsonTree(jsonObject);
+            jsonInString = gson.toJson(jsonElement);
+            return jsonInString;
+        }
+    }
 
     // ***have to make private
      protected TreeMap<String,Hotel>  hotelMap;
      protected HashMap<String, ArrayList<WordMapEntry>> wordMap;
+     protected HashMap<String, ArrayList<HotelMapEntry>> cityHotelMap;
+
 
     public HotelDatabase() {
         hotelMap = new TreeMap<>(new Comparator<String>() {
@@ -54,6 +98,7 @@ public class HotelDatabase {
             }
         });
         wordMap = new HashMap<>();
+        cityHotelMap = new HostMap<>();
 
     }
 
@@ -78,7 +123,35 @@ public class HotelDatabase {
         for (ArrayList<HotelDatabase.WordMapEntry> list : wordMap.values()) {
             Collections.sort(list);
         }
+        putDataInCityHotelMap();
+        for (ArrayList<HotelDatabase.HotelMapEntry> list : cityHotelMap.values()) {
+            Collections.sort(list);
+        }
     }
+    protected void putDataInCityHotelMap(){
+        Collection<Hotel> hotels = hotelMap.values();
+        for(Hotel hotel: hotels){
+            String city = hotel.getCi();
+            HotelMapEntry hotelMapEntry = new HotelMapEntry(hotel.getId(),hotel.getF(),hotel.getAverageScore());
+            if(!cityHotelMap.containsKey(city))
+                cityHotelMap.put(city,new ArrayList<>());
+            cityHotelMap.get(city).add(hotelMapEntry);
+        }
+    }
+    public ArrayList<HotelMapEntry> getHotelsByCityAndKeyWord(String city, String keyword){
+        ArrayList<HotelMapEntry> entries = new ArrayList<>();
+        if(keyword == null)
+            return cityHotelMap.get(city);
+        for(HotelMapEntry hotelMapEntry: cityHotelMap.get(city)){
+            if(hotelMapEntry.getHotelName().contains(keyword)){
+                entries.add(hotelMapEntry);
+            }
+        }
+        return entries;
+    }
+
+
+
 
     protected void putDataInWordMap(){
 

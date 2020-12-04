@@ -34,6 +34,9 @@ public class Review implements Comparable<Review> {
         this.userNickname = userNickname;
 
     }
+    public int getRatingOverall(){
+        return ratingOverall;
+    }
 
     public String getReviewSubmissionTime() {
         return reviewSubmissionTime;
@@ -80,6 +83,7 @@ public class Review implements Comparable<Review> {
         jsonObject.addProperty("reviewId", getReviewId());
         jsonObject.addProperty("title", getTitle());
         jsonObject.addProperty("user", getUserNickname());
+        jsonObject.addProperty("rating", getRatingOverall());
         jsonObject.addProperty("reviewText", getReviewText());
         jsonObject.addProperty("date", getDate().toString());
         return jsonObject;

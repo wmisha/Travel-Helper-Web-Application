@@ -146,6 +146,27 @@ public class ThreadSafeHotelDatabase extends HotelDatabase{
         }
     }
 
+    public String searchHotelByCityAndKeyword(String city,String keyword){
+        JsonObject jsonObject = new JsonObject();
+        String jsonInString = "";
+
+
+        return jsonInString;
+
+    }
+
+    public String putSuggestionHotelsInJson(String city, String keyword){
+            ArrayList<HotelMapEntry> entries = getHotelsByCityAndKeyWord(city,keyword);
+            JsonObject jsonObject = new JsonObject();
+            String jsonInString = "";
+        JsonArray entriesArray = new JsonArray();
+        for(HotelMapEntry entry: entries){
+            entriesArray.add(entry.putHotelMapEntryInJson());
+        }
+        jsonObject.add("reviews",entriesArray);
+        return (gson.toJson(gson.toJsonTree(jsonObject)));
+    }
+
     public String hotelInfo(String arg){
         JsonObject jsonObject = new JsonObject();
         String jsonInString = "";

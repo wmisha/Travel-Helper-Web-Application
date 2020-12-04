@@ -33,6 +33,18 @@ public class Hotel{
         this.c = c;
         this.ll = ll;
     }
+    public int getAverageScore(){
+        int averageScore = 0;
+        int total = 0;
+        int count = 0;
+        for(Review review: reviews){
+            count++;
+
+            total += review.getRatingOverall();
+        }
+        averageScore = total / count;
+        return averageScore;
+    }
 
     @Override
     public String toString() {
@@ -92,6 +104,7 @@ public class Hotel{
         this.reviews.add(r);
         reviewIds.add(r.getReviewId());
     }
+
 
     public void sortReviews() {
         if (this.reviews != null) {
