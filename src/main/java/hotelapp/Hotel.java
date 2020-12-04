@@ -148,6 +148,24 @@ public class Hotel{
         return jsonInString;
     }
 
+
+    public String newHotelToJson(String num){
+
+        JsonObject jsonObject = new JsonObject();
+        String jsonInString = "";
+
+        jsonObject.addProperty("name", getF());
+        jsonObject.addProperty("addr", getAd());
+
+        JsonArray reviews = reviewsToJson(num);
+        jsonObject.add("reviews",reviews);
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        JsonElement jsonElement = gson.toJsonTree(jsonObject);
+        jsonInString = gson.toJson(jsonElement);
+        return jsonInString;
+
+    }
     public JsonArray reviewsToJson(String num){
         int end =0;
         if(num == null)
@@ -160,7 +178,6 @@ public class Hotel{
             reviewsArray.add(r.reviewToJson());
         }
         return reviewsArray;
-
     }
 
 }

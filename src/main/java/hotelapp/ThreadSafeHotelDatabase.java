@@ -186,7 +186,7 @@ public class ThreadSafeHotelDatabase extends HotelDatabase{
             }
 
             if(hotel != null){
-                return hotel.hotelToJson();
+                return hotel.newHotelToJson(null);
             }
             jsonObject.addProperty("success", Boolean.FALSE);
             jsonObject.addProperty("hotelId", "invalid");
@@ -201,7 +201,6 @@ public class ThreadSafeHotelDatabase extends HotelDatabase{
 
     }
     public String reviews(String arg,String num){
-       // int number = Integer.parseInt(num);
         JsonObject jsonObject = new JsonObject();
         try {
             Hotel hotel;
@@ -216,9 +215,9 @@ public class ThreadSafeHotelDatabase extends HotelDatabase{
                 jsonObject.addProperty("success", Boolean.FALSE);
                 jsonObject.addProperty("hotelId", "invalid");
             }else {
-                JsonArray reviews = hotel.reviewsToJson(num);
                 jsonObject.addProperty("success", Boolean.TRUE);
                 jsonObject.addProperty("hotelId", hotel.getId());
+                JsonArray reviews = hotel.reviewsToJson(num);
                 jsonObject.add("reviews",reviews);
             }
             return (gson.toJson(gson.toJsonTree(jsonObject)));
