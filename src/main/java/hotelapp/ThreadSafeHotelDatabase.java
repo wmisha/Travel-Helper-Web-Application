@@ -45,6 +45,11 @@ public class ThreadSafeHotelDatabase extends HotelDatabase{
             Collections.sort(list);
         }
         //System.out.println("Stage 5 (sort wordMap): " + (System.currentTimeMillis()-start) + " ms");
+        putDataInCityHotelMap();
+
+        for (ArrayList<HotelDatabase.HotelMapEntry> list : cityHotelMap.values()) {
+            Collections.sort(list);
+        }
     }
 
     @Override
@@ -146,24 +151,24 @@ public class ThreadSafeHotelDatabase extends HotelDatabase{
         }
     }
 
-    public String searchHotelByCityAndKeyword(String city,String keyword){
-        JsonObject jsonObject = new JsonObject();
-        String jsonInString = "";
-
-
-        return jsonInString;
-
-    }
 
     public String putSuggestionHotelsInJson(String city, String keyword){
-            ArrayList<HotelMapEntry> entries = getHotelsByCityAndKeyWord(city,keyword);
+
+            ArrayList<HotelMapEntry> entries = searchHotels(city,keyword);
             JsonObject jsonObject = new JsonObject();
             String jsonInString = "";
+            if(entries == null){
+                jsonObject.addProperty("success", Boolean.FALSE);
+                jsonObject.addProperty("city", "invalid");
+                JsonElement jsonElement = gson.toJsonTree(jsonObject);
+                jsonInString = gson.toJson(jsonElement);
+                return jsonInString;
+            }
         JsonArray entriesArray = new JsonArray();
         for(HotelMapEntry entry: entries){
             entriesArray.add(entry.putHotelMapEntryInJson());
         }
-        jsonObject.add("reviews",entriesArray);
+        jsonObject.add("Hotels",entriesArray);
         return (gson.toJson(gson.toJsonTree(jsonObject)));
     }
 

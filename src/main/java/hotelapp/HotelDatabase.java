@@ -66,10 +66,10 @@ public class HotelDatabase {
 
         @Override
         public int compareTo(HotelMapEntry o) {
-            return this.averageRating - o.averageRating;
+            return o.averageRating - this.averageRating;
         }
 
-        public String putHotelMapEntryInJson(){
+        public JsonObject putHotelMapEntryInJson(){
             JsonObject jsonObject = new JsonObject();
             String jsonInString = "";
 
@@ -77,10 +77,7 @@ public class HotelDatabase {
             jsonObject.addProperty("name", getHotelName());
             jsonObject.addProperty("rating", getAverageRating());
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            JsonElement jsonElement = gson.toJsonTree(jsonObject);
-            jsonInString = gson.toJson(jsonElement);
-            return jsonInString;
+            return jsonObject;
         }
     }
 
@@ -138,8 +135,11 @@ public class HotelDatabase {
             cityHotelMap.get(city).add(hotelMapEntry);
         }
     }
-    public ArrayList<HotelMapEntry> getHotelsByCityAndKeyWord(String city, String keyword){
+    public ArrayList<HotelMapEntry> searchHotels(String city, String keyword){
         ArrayList<HotelMapEntry> entries = new ArrayList<>();
+        if(!cityHotelMap.containsKey(city)){
+            return null;
+        }
         if(keyword == null)
             return cityHotelMap.get(city);
         for(HotelMapEntry hotelMapEntry: cityHotelMap.get(city)){
