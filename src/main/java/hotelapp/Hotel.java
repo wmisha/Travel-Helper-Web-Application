@@ -92,6 +92,9 @@ public class Hotel{
     public Position getPosition(){
         return ll;
     }
+    public String getFullAddress(){
+        return getAd()+" ," + getCi() + " ,"+ getPr();
+    }
 
     public void addReview(Review r) {
         if (this.reviews == null) {

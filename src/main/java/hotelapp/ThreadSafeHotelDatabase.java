@@ -158,21 +158,6 @@ public class ThreadSafeHotelDatabase extends HotelDatabase{
             for(HotelMapEntry entry: entries){
                 System.out.println(entry.getLink());
         }
-//            JsonObject jsonObject = new JsonObject();
-//            String jsonInString = "";
-//            if(entries == null){
-//                jsonObject.addProperty("success", Boolean.FALSE);
-//                jsonObject.addProperty("city", "invalid");
-//                JsonElement jsonElement = gson.toJsonTree(jsonObject);
-//                jsonInString = gson.toJson(jsonElement);
-//                return jsonInString;
-//            }
-//        JsonArray entriesArray = new JsonArray();
-//        for(HotelMapEntry entry: entries){
-//            entriesArray.add(entry.putHotelMapEntryInJson());
-//        }
-//        jsonObject.add("Hotels",entriesArray);
-//        return (gson.toJson(gson.toJsonTree(jsonObject)));
 
         return entries;
     }
@@ -191,7 +176,7 @@ public class ThreadSafeHotelDatabase extends HotelDatabase{
             }
 
             if(hotel != null){
-                return hotel.newHotelToJson(null);
+                return hotel.newHotelToJson("3");
             }
             jsonObject.addProperty("success", Boolean.FALSE);
             jsonObject.addProperty("hotelId", "invalid");

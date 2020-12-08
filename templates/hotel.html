@@ -1,29 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hotel Info</title>
+    <title>Hotel</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
+
 <body>
+<div class="container pt-3 my-3 border justify-content-center">
+    <h3>$hotelName</h3>
+    <h5>$hotelAddress</h5>
+</div>
+<div class="container pt-3 my-3 border">
+    <h2>Reviews: </h2>
 
-#if($name != "anonymous")
-<h5>Hello, $name! </h5>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>rating</th>
+            <th>title</th>
+            <th>text</th>
+            <th>customer</th>
+            <th>date</th>
+        </tr>
+        </thead>
+        <tbody>
+        #foreach($review in $reviews)
+        <tr>
+            <td>$review.getRatingOverall()</td>
+            <td>$review.getTitle()</a></td>
+            <td>$review.getReviewText()</td>
+            <td>$review.getUserNickname()</a></td>
+            <td>$review.getDate()</a></td>
+
+        </tr>
+        #end
+        </tbody>
+
+    </table>
+
+
+</div>
+#foreach($review in $reviews)
+<!--<p>-->
+<!--    ReviewRating: $review.getRatingOverall()</br>-->
+<!--    ReviewTittle: $review.getTitle()</br>-->
+<!--    ReviewText: $review.getReviewText()</br>-->
+<!--    ReviewUser: $review.getUserNickname()</br>-->
+<!--    ReviewDate: $review.getDate()</br>-->
+<!--</p>-->
 #end
-
-<p>Recommended Hotels: </p>
-<table border="1">
-    <tr><th>Hotel ID</th><th>Hotel Name</th><th>Rating</th><th>Link</th></tr>
-#foreach($hotel in $hotels)
-    <tr>
-        <td>$hotel.getHotelId()</td>
-        <td><a href="http://localhost:8090/hotelInfo?hotelId=$hotel.getHotelId()&num=5">$hotel.getHotelName()</a></td>
-        <td>$hotel.getAverageRating()</td>
-        <td><a href="$hotel.getLink()">$hotel.getLink()</a></td>
-
-    </tr>
-#end
-</table>
-<!--$hotels-->
 
 <resource name="style1.css" type="download" location="style1.css">
 </resource>

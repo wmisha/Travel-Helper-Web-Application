@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <title>HotelSearch</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+
+#if($name != "anonymous")
+<h5>Hello, $name! </h5>
+#end
+
+<p>Please enter city name and keyword to search hotels:</p>
+
+<form action="/searchHotel" method="post">
+    <table border="0">
+        <tr>
+            <td>City:</td>
+            <td><input type="text" size="30" name="city" ></td>
+        </tr>
+        <tr>
+            <td>keyword:</td>
+            <td><input type="text" size="30" name="keyword" ></td>
+        </tr>
+    </table>
+    <p><input type="submit" value="Enter"></p>
+</form>
+
+</body>
+</html>
+
+
+

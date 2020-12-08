@@ -55,9 +55,6 @@ public class HotelDatabase {
         }
         public String getLink(){
             String city= hotelMap.get(hotelId).getCi().replaceAll(" ","-");
-
-            System.out.println("cityName: " + city);
-
             return link + city +"-Hotels.h" + hotelId +".Hotel-Information";
         }
         public int getAverageRating(){
@@ -103,7 +100,18 @@ public class HotelDatabase {
      protected HashMap<String, ArrayList<WordMapEntry>> wordMap;
      protected HashMap<String, ArrayList<HotelMapEntry>> cityHotelMap;
 
-
+    public String getSpecificHotelName(String hotelId){
+        return hotelMap.get(hotelId).getF();
+    }
+    public String getSpecificHotelAddress(String hotelId){
+        Hotel hotel = hotelMap.get(hotelId);
+       return hotel.getFullAddress();
+    }
+    public List<Review> getReviews(String hotelId){
+        Hotel hotel = hotelMap.get(hotelId);
+        List<Review> reviews= hotel.getReviews();
+        return reviews;
+    }
     public HotelDatabase() {
         hotelMap = new TreeMap<>(new Comparator<String>() {
             @Override
@@ -113,7 +121,6 @@ public class HotelDatabase {
         });
         wordMap = new HashMap<>();
         cityHotelMap = new HostMap<>();
-
     }
 
    public JsonArray parseReviewsToJsonArray(String arg,String num){
