@@ -3,17 +3,23 @@ package server;
 import com.google.gson.JsonObject;
 import hotelapp.ThreadSafeHotelDatabase;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
-public class SearchHotelServlet extends HttpServlet {
-
-    private ThreadSafeHotelDatabase db;
+public class SearchHotelServlet extends LoginBaseServlet {
+    ThreadSafeHotelDatabase db;
 
     public SearchHotelServlet(ThreadSafeHotelDatabase db) {
         this.db = db;
@@ -30,27 +36,89 @@ public class SearchHotelServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_OK);
+        PrintWriter out = response.getWriter();
 
-        PrintWriter writer = response.getWriter();
+        String name = getUsername(request);
+        String date = getDate();
+
+        VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
+        VelocityContext context = new VelocityContext();
+        Template template = ve.getTemplate("templates/searchHotel.html");
+
+        context.put("name", name);
+        context.put("date",date);
+        StringWriter writer = new StringWriter();
+        template.merge(context, writer);
+
+        if (name != null) {
+            out.println(writer.toString());
+        }
+        else {
+            response.sendRedirect("/login");
+        }
+
+    }
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+
+        PrintWriter out = response.getWriter();
+
         String city = request.getParameter("city");
         System.out.println("Parameter city:  " + city);
         String keyword = request.getParameter("keyword");
         System.out.println("parameter keyword: " + keyword);
+
         if (keyword == null && city == null) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("success", Boolean.FALSE);
-            jsonObject.addProperty("city", "invalid");
-            jsonObject.addProperty("keyword", "invalid");
-            writer.println(jsonObject.toString());
+            response.sendRedirect("/searchHotel");
             return;
         }
 
+        String name = getUsername(request);
+        String hotels = "";
+
+        VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
+        VelocityContext context = new VelocityContext();
+        Template template = ve.getTemplate("templates/hotel.html");
+
         city = StringEscapeUtils.escapeHtml4(city);
         keyword = StringEscapeUtils.escapeHtml4(keyword);
-        String hotels = db.putSuggestionHotelsInJson(city,keyword);
-        writer.println(hotels);
+
+        hotels = db.putSuggestionHotelsInJson(city,keyword);
+        context.put("name", name);
+        context.put("hotels",hotels);
+
+
+        StringWriter writer = new StringWriter();
+        template.merge(context, writer);
+        out.println(writer.toString());
+
+
+//        response.setContentType("application/json");
+//        response.setStatus(HttpServletResponse.SC_OK);
+//
+//        PrintWriter writer = response.getWriter();
+//        String city = request.getParameter("city");
+//        System.out.println("Parameter city:  " + city);
+//        String keyword = request.getParameter("keyword");
+//        System.out.println("parameter keyword: " + keyword);
+//        if (keyword == null && city == null) {
+//            JsonObject jsonObject = new JsonObject();
+//            jsonObject.addProperty("success", Boolean.FALSE);
+//            jsonObject.addProperty("city", "invalid");
+//            jsonObject.addProperty("keyword", "invalid");
+//            writer.println(jsonObject.toString());
+//            return;
+//        }
+//
+//        city = StringEscapeUtils.escapeHtml4(city);
+//        keyword = StringEscapeUtils.escapeHtml4(keyword);
+//        String hotels = db.putSuggestionHotelsInJson(city,keyword);
+//        writer.println(hotels);
+
+
     }
 
 }

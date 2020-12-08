@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+
+
 public class UserRegisterServlet extends LoginBaseServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)

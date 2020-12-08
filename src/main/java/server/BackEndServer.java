@@ -1,17 +1,28 @@
 package server;
 
+import hotelapp.HotelSearch;
+import hotelapp.ThreadSafeHotelDatabase;
+import hotelapp.ThreadSafeParseFiles;
 import org.apache.velocity.app.VelocityEngine;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class BackEndServer {
     public static final int PORT = 8090;
+    private ThreadSafeHotelDatabase resources;
 
-    public static void main(String[] args){
+    public BackEndServer(ThreadSafeHotelDatabase resources) {
+        this.resources = resources;
+    }
 
+    public void start(){
         Server server = new Server(PORT);
         // Context 1 =
         ServletContextHandler context1 = new ServletContextHandler();
@@ -20,6 +31,7 @@ public class BackEndServer {
         context1.addServlet(UserRegisterServlet.class, "/register");
         context1.addServlet(UserLoginServlet.class, "/login");
         context1.addServlet(WelcomeServlet.class, "/welcome");
+        context1.addServlet(new ServletHolder(new SearchHotelServlet(resources)), "/searchHotel");
 
 
         // initialize Velocity
@@ -44,6 +56,32 @@ public class BackEndServer {
         try {
             server.start();
             server.join();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args){
+        if (args.length < 2) {
+            System.out.println("provide -hotels or -reviews");
+            System.exit(-1);
+        }
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < args.length; i = i + 2) {
+            map.putIfAbsent(args[i], args[i + 1]);
+        }
+        String hotelsFile = map.get("-hotels");
+        String reviewsDir = map.get("-reviews");
+
+        ThreadSafeHotelDatabase db = new ThreadSafeHotelDatabase();
+        ThreadSafeParseFiles passFiles = new ThreadSafeParseFiles(Integer.parseInt("3"));
+        HotelSearch hotelSearch = new HotelSearch(db, passFiles);
+        hotelSearch.getDataReady(hotelsFile, reviewsDir);
+
+        BackEndServer backEndServer = new BackEndServer(db);
+        try {
+            backEndServer.start();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

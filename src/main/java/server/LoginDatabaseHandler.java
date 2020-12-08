@@ -28,12 +28,26 @@ public class LoginDatabaseHandler {
 	        "SHOW TABLES LIKE 'login_users';";
 
 	/** Used to create necessary tables for this example. */
-	private static final String CREATE_SQL =
+	private static final String CREATE_LoginUsers =
 			"CREATE TABLE login_users (" +
 			"userid INTEGER AUTO_INCREMENT PRIMARY KEY, " +
 			"username VARCHAR(32) NOT NULL UNIQUE, " +
 			"password CHAR(64) NOT NULL, " +
 			"usersalt CHAR(32) NOT NULL);";
+	private static final String CREATE_Hotels =
+			"CREATE TABLE Hotels (" +
+					"id INTEGER PRIMARY KEY, " +
+					"name VARCHAR(225)" +
+					"address VARCHAR(225) " +
+					"average_score INTEGER);";
+	private static final String CREATE_Reviews =
+			"CREATE TABLE Reviews (" +
+					"reviewsId INTEGER PRIMARY KEY, " +
+					"reviewTitle VARCHAR(255)  " +
+					"reviewText  VARCHAR(2000)  " +
+					"date         date);";
+
+
 
 	/** Used to insert a new user into the database. */
 	private static final String REGISTER_SQL =
@@ -121,7 +135,9 @@ public class LoginDatabaseHandler {
 			if (!statement.executeQuery(TABLES_SQL).next()) {
 			    // Table missing, must create
 				log.debug("Creating tables...");
-				statement.executeUpdate(CREATE_SQL);
+				statement.executeUpdate(CREATE_LoginUsers);
+				statement.executeUpdate(CREATE_Hotels);
+				statement.executeUpdate(CREATE_Reviews);
 
 				// Check if create was successful
 				if (!statement.executeQuery(TABLES_SQL).next()) {
