@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.JsonObject;
+import hotelapp.HotelDatabase;
 import hotelapp.ThreadSafeHotelDatabase;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.velocity.Template;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,7 +79,7 @@ public class SearchHotelServlet extends LoginBaseServlet {
         }
 
         String name = getUsername(request);
-        String hotels = "";
+        ArrayList<HotelDatabase.HotelMapEntry> hotels;
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
@@ -88,6 +90,7 @@ public class SearchHotelServlet extends LoginBaseServlet {
 
         hotels = db.putSuggestionHotelsInJson(city,keyword);
         context.put("name", name);
+
         context.put("hotels",hotels);
 
 

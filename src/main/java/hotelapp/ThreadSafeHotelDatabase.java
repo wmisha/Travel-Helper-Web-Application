@@ -152,24 +152,29 @@ public class ThreadSafeHotelDatabase extends HotelDatabase{
     }
 
 
-    public String putSuggestionHotelsInJson(String city, String keyword){
+    public ArrayList<HotelMapEntry> putSuggestionHotelsInJson(String city, String keyword){
 
             ArrayList<HotelMapEntry> entries = searchHotels(city,keyword);
-            JsonObject jsonObject = new JsonObject();
-            String jsonInString = "";
-            if(entries == null){
-                jsonObject.addProperty("success", Boolean.FALSE);
-                jsonObject.addProperty("city", "invalid");
-                JsonElement jsonElement = gson.toJsonTree(jsonObject);
-                jsonInString = gson.toJson(jsonElement);
-                return jsonInString;
-            }
-        JsonArray entriesArray = new JsonArray();
-        for(HotelMapEntry entry: entries){
-            entriesArray.add(entry.putHotelMapEntryInJson());
+            for(HotelMapEntry entry: entries){
+                System.out.println(entry.getLink());
         }
-        jsonObject.add("Hotels",entriesArray);
-        return (gson.toJson(gson.toJsonTree(jsonObject)));
+//            JsonObject jsonObject = new JsonObject();
+//            String jsonInString = "";
+//            if(entries == null){
+//                jsonObject.addProperty("success", Boolean.FALSE);
+//                jsonObject.addProperty("city", "invalid");
+//                JsonElement jsonElement = gson.toJsonTree(jsonObject);
+//                jsonInString = gson.toJson(jsonElement);
+//                return jsonInString;
+//            }
+//        JsonArray entriesArray = new JsonArray();
+//        for(HotelMapEntry entry: entries){
+//            entriesArray.add(entry.putHotelMapEntryInJson());
+//        }
+//        jsonObject.add("Hotels",entriesArray);
+//        return (gson.toJson(gson.toJsonTree(jsonObject)));
+
+        return entries;
     }
 
     public String hotelInfo(String arg){

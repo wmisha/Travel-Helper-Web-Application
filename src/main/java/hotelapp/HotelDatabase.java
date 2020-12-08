@@ -41,17 +41,25 @@ public class HotelDatabase {
             return -date.compareTo(dateOther);
         }
     }
-    protected class HotelMapEntry implements Comparable<HotelMapEntry>{
+    public class HotelMapEntry implements Comparable<HotelMapEntry>{
         private String hotelId;
         private String hotelName;
         private int averageRating;
+        private String link = "https://www.expedia.com/";
 
         public HotelMapEntry(String hotelId, String hotelName, int averageRating) {
             this.hotelId = hotelId;
             this.hotelName = hotelName;
             this.averageRating = averageRating;
-        }
 
+        }
+        public String getLink(){
+            String city= hotelMap.get(hotelId).getCi().replaceAll(" ","-");
+
+            System.out.println("cityName: " + city);
+
+            return link + city +"-Hotels.h" + hotelId +".Hotel-Information";
+        }
         public int getAverageRating(){
             return averageRating;
         }
@@ -78,6 +86,15 @@ public class HotelDatabase {
             jsonObject.addProperty("rating", getAverageRating());
 
             return jsonObject;
+        }
+
+        @Override
+        public String toString() {
+            return "{" +
+                    "hotelId='" + hotelId + '\'' +
+                    ", hotelName='" + hotelName + '\'' +
+                    ", averageRating=" + averageRating +
+                    '}';
         }
     }
 

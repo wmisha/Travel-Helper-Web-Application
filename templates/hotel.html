@@ -11,10 +11,19 @@
 #end
 
 <p>Recommended Hotels: </p>
-<!--#foreach( $hotel in $hotels)-->
-<!--$hotel<br>-->
-<!--#end-->
-$hotels
+<table border="1">
+    <tr><th>Hotel ID</th><th>Hotel Name</th><th>Rating</th><th>Link</th></tr>
+#foreach($hotel in $hotels)
+    <tr>
+        <td>$hotel.getHotelId()</td>
+        <td href="">$hotel.getHotelName()</td>
+        <td>$hotel.getAverageRating()</td>
+        <td><a href="$hotel.getLink()">$hotel.getLink()</a></td>
+
+    </tr>
+#end
+</table>
+<!--$hotels-->
 
 <resource name="style1.css" type="download" location="style1.css">
 </resource>
