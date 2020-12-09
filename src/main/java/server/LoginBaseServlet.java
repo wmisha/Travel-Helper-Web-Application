@@ -70,6 +70,8 @@ public class LoginBaseServlet extends HttpServlet {
 	}
 
 	protected String getDate() {
+
+				//String format1 = "yyyy-mm-ddThh:mm:ssZ";
 		String format = "hh:mm a 'on' EEE, MMM dd, yyyy";
 		DateFormat dateFormat = new SimpleDateFormat(format);
 		return dateFormat.format(Calendar.getInstance().getTime());

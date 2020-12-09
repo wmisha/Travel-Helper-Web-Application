@@ -20,20 +20,52 @@ public class Review implements Comparable<Review> {
     private String reviewSubmissionTime;
     private String userNickname;
 
-    public Review(String hotelId, String reviewId, int ratingOverall,
-                  String title, String reviewText, String reviewSubmissionTime,String userNickname) {
+//    public Review(String hotelId, String reviewId, int ratingOverall,
+//                  String title, String reviewText, String reviewSubmissionTime,String userNickname) {
+//        this.hotelId = hotelId;
+//        this.reviewId = reviewId;
+//        this.ratingOverall = ratingOverall;
+//        this.title = title;
+//        this.reviewText = reviewText;
+//        this.reviewSubmissionTime = reviewSubmissionTime.substring(0,10);
+//        this.userNickname = userNickname;
+//
+//    }
+
+
+    public Review(String hotelId, int ratingOverall, String title, String reviewText,String userNickname, String reviewSubmissionTime) {
         this.hotelId = hotelId;
-        this.reviewId = reviewId;
         this.ratingOverall = ratingOverall;
         this.title = title;
         this.reviewText = reviewText;
-        this.reviewSubmissionTime = reviewSubmissionTime.substring(0,10);
         this.userNickname = userNickname;
+        this.reviewSubmissionTime = reviewSubmissionTime;
+    }
 
+    public void setHotelId(String hotelId) {
+        this.hotelId = hotelId;
     }
-    public String getHotelName(){
-        return "Name";
+
+    public void setRatingOverall(int ratingOverall) {
+        this.ratingOverall = ratingOverall;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setReviewText(String reviewText) {
+        this.reviewText = reviewText;
+    }
+
+    public void setReviewSubmissionTime(String reviewSubmissionTime) {
+        this.reviewSubmissionTime = reviewSubmissionTime;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
     public int getRatingOverall(){
         return ratingOverall;
     }

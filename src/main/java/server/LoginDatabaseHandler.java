@@ -25,51 +25,56 @@ public class LoginDatabaseHandler {
 
 	/** Used to determine if necessary tables are provided. */
 	private static final String TABLES_SQL =
-	        "SHOW TABLES LIKE 'login_users';";
+	        "SHOW TABLES LIKE 'Users' ";
+
 
 	/** Used to create necessary tables for this example. */
-	private static final String CREATE_LoginUsers =
-			"CREATE TABLE login_users (" +
-			"userid INTEGER AUTO_INCREMENT PRIMARY KEY, " +
+	private static final String CREATE_Users =
+			"CREATE TABLE Users (" +
+			"userId INTEGER AUTO_INCREMENT PRIMARY KEY, " +
 			"username VARCHAR(32) NOT NULL UNIQUE, " +
 			"password CHAR(64) NOT NULL, " +
-			"usersalt CHAR(32) NOT NULL);";
+			"userSalt CHAR(32) NOT NULL);";
 	private static final String CREATE_Hotels =
 			"CREATE TABLE Hotels (" +
-					"id INTEGER PRIMARY KEY, " +
-					"name VARCHAR(225)" +
-					"address VARCHAR(225) " +
-					"average_score INTEGER);";
+					"hotelId INTEGER PRIMARY KEY, " +
+					"name VARCHAR(255)," +
+					"address VARCHAR(255)," +
+					"link VARCHAR(255)," +
+					"averageScore FLOAT);";
 	private static final String CREATE_Reviews =
 			"CREATE TABLE Reviews (" +
-					"reviewsId INTEGER PRIMARY KEY, " +
-					"reviewTitle VARCHAR(255)  " +
-					"reviewText  VARCHAR(2000)  " +
-					"date         date);";
+					"reviewId VARCHAR(255) PRIMARY KEY, " +
+					"hotelId INTEGER," +
+					"rating INTEGER," +
+					"title VARCHAR(500)," +
+					"reviewText  VARCHAR(2000)," +
+					"customer VARCHAR(35)," +
+					"date        VARCHAR(35) );";
 
 
 
 	/** Used to insert a new user into the database. */
 	private static final String REGISTER_SQL =
-			"INSERT INTO login_users (username, password, usersalt) " +
+			"INSERT INTO Users (username, password, userSalt) " +
 			"VALUES (?, ?, ?);";
 
 	/** Used to determine if a username already exists. */
 	private static final String USER_SQL =
-			"SELECT username FROM login_users WHERE username = ?";
+			"SELECT username FROM Users WHERE username = ?";
 
 	/** Used to retrieve the salt associated with a specific user. */
 	private static final String SALT_SQL =
-			"SELECT usersalt FROM login_users WHERE username = ?";
+			"SELECT userSalt FROM Users WHERE username = ?";
 
 	/** Used to authenticate a user. */
 	private static final String AUTH_SQL =
-			"SELECT username FROM login_users " +
+			"SELECT username FROM Users " +
 			"WHERE username = ? AND password = ?";
 
 	/** Used to remove a user from the database. */
 	private static final String DELETE_SQL =
-			"DELETE FROM login_users WHERE username = ?";
+			"DELETE FROM Users WHERE username = ?";
 
 	/** Used to configure connection to database. */
 	private DatabaseConnector db;
@@ -135,7 +140,7 @@ public class LoginDatabaseHandler {
 			if (!statement.executeQuery(TABLES_SQL).next()) {
 			    // Table missing, must create
 				log.debug("Creating tables...");
-				statement.executeUpdate(CREATE_LoginUsers);
+				statement.executeUpdate(CREATE_Users);
 				statement.executeUpdate(CREATE_Hotels);
 				statement.executeUpdate(CREATE_Reviews);
 

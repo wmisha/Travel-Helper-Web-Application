@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.JsonObject;
+import hotelapp.HotelDatabase;
 import hotelapp.Review;
 import hotelapp.ThreadSafeHotelDatabase;
 import org.apache.commons.text.StringEscapeUtils;
@@ -15,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HotelServlet extends LoginBaseServlet {
@@ -38,18 +42,34 @@ public class HotelServlet extends LoginBaseServlet {
 
 
         PrintWriter out = response.getWriter();
+
+        String date = getDate();
         String hotelId = request.getParameter("hotelId");
-        String num = request.getParameter("num");
+        System.out.println( "hotelId: ..........." +hotelId);
+//        String rating = request.getParameter("rating");
+//        String title = request.getParameter("title");
+//        String text = request.getParameter("text");
+//        String customer = request.getParameter("customer");
+//
+//
+//        if (hotelId != null && rating != null && title != null && text != null) {
+//            rating = StringEscapeUtils.escapeHtml4(rating);
+//            title = StringEscapeUtils.escapeHtml4(title);
+//            text = StringEscapeUtils.escapeHtml4(text);
+//            customer = StringEscapeUtils.escapeHtml4(customer);
+//            db.AddNewReviewToHotelMap(hotelId,Integer.parseInt(rating),title,text,customer,date);
+//        }
+
         String hotelName = db.getSpecificHotelName(hotelId);
         String hotelAddress = db.getSpecificHotelAddress(hotelId);
         List<Review> reviews = db.getReviews(hotelId);
         String name = getUsername(request);
-        String date = getDate();
+
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("templates/hotel.html");
-
+       context.put("hotelId",hotelId);
        context.put("date",date);
        context.put("hotelName", hotelName);
        context.put("hotelAddress", hotelAddress);
@@ -60,38 +80,63 @@ public class HotelServlet extends LoginBaseServlet {
         template.merge(context, writer);
         out.println(writer.toString());
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        response.setContentType("application/json");
-//        response.setStatus(HttpServletResponse.SC_OK);
-//
-//        PrintWriter writer = response.getWriter();
-//        String hotelId = request.getParameter("hotelId");
-//        if (hotelId == null) {
-//            JsonObject jsonObject = new JsonObject();
-//            jsonObject.addProperty("success", Boolean.FALSE);
-//            jsonObject.addProperty("hotelId", "invalid");
-//            writer.println(jsonObject.toString());
-//            return;
+//        if (name != null) {
+//            out.println(writer.toString());
 //        }
+//        else {
+//            response.sendRedirect("/login");
+//        }
+    }
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+
+        PrintWriter out = response.getWriter();
+
+        String hotelId = request.getParameter("hotelId");
+        System.out.println("hotelId:!!!!!!!!!!! " + hotelId);
+        String rating = request.getParameter("rating");
+        String title = request.getParameter("title");
+        String text = request.getParameter("text");
+        String customer = getUsername(request);
+        System.out.println("customer: " + customer);
+        String ex = "2016-07-11T19:25:29Z";
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS"));
+        System.out.println("date: " + date);
+
+        if (rating == null && title == null && text == null && customer==null) {
+            response.sendRedirect("/hotelInfo");
+            return;
+        }
+        rating = StringEscapeUtils.escapeHtml4(rating);
+        title = StringEscapeUtils.escapeHtml4(title);
+        text = StringEscapeUtils.escapeHtml4(text);
+        customer = StringEscapeUtils.escapeHtml4(customer);
+        db.AddNewReviewToHotelMap(hotelId,Integer.parseInt(rating),title,text,customer,date);
+        out.println("<h2>Successfully add a review!</h2>");
+        out.println();
+        response.sendRedirect("/hotelInfo?hotelId=" + hotelId);
+
+//        String name = getUsername(request);
+//        ArrayList<HotelDatabase.HotelMapEntry> hotels;
 //
-//        hotelId = StringEscapeUtils.escapeHtml4(hotelId);
-//        String hotelInfo = db.hotelInfo(hotelId);
-//        writer.println(hotelInfo);
+//        VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
+//        VelocityContext context = new VelocityContext();
+//        Template template = ve.getTemplate("templates/recommendHotels.html");
+
+
+      //  hotels = db.putSuggestionHotelsInJson(city,keyword);
+//
+//        context.put("name", name);
+//        context.put("hotels",hotels);
+//
+//        StringWriter writer = new StringWriter();
+//        template.merge(context, writer);
+//        out.println(writer.toString());
+
+
 
     }
 

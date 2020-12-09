@@ -100,8 +100,21 @@ public class HotelDatabase {
      protected TreeMap<String,Hotel>  hotelMap;
      protected HashMap<String, ArrayList<WordMapEntry>> wordMap;
      protected HashMap<String, ArrayList<HotelMapEntry>> cityHotelMap;
+     protected HashMap<String, ArrayList<Review>> userReviews = new HostMap<>();
 
+     public void AddNewReviewToHotelMap(String hotelId,int ratingOverall, String title,String reviewText,String userNickname,String reviewSubmissionTime){
+         Hotel hotel = hotelMap.get(hotelId);
+         Review newReview = new Review(hotelId,ratingOverall,title,reviewText,userNickname,reviewSubmissionTime);
+         String user = newReview.getUserNickname();
+         userReviews.putIfAbsent(user,new ArrayList<>());
+         userReviews.get(user).add(newReview);
+         hotel.addReview(newReview);
 
+     }
+
+     public ArrayList<Review> getASpecificUserReviews(String userName){
+         return userReviews.get(userName);
+     }
 
     public ArrayList<Review> getReviewsFromWordMap(String word){
         // if does not contain this word

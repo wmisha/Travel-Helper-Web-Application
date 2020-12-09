@@ -58,6 +58,8 @@ public class SearchReviewServlet extends LoginBaseServlet {
 
 
 
+
+
 //        PrintWriter out = response.getWriter();
 //        String word = request.getParameter("word");
 //
