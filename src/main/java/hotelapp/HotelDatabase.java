@@ -1,6 +1,7 @@
 package hotelapp;
 
 import com.google.gson.*;
+import org.apache.logging.log4j.core.appender.routing.Route;
 import org.eclipse.jetty.util.HostMap;
 
 import java.time.OffsetDateTime;
@@ -100,6 +101,23 @@ public class HotelDatabase {
      protected HashMap<String, ArrayList<WordMapEntry>> wordMap;
      protected HashMap<String, ArrayList<HotelMapEntry>> cityHotelMap;
 
+
+
+    public ArrayList<Review> getReviewsFromWordMap(String word){
+        // if does not contain this word
+        //System.out.println(wordMap);
+        if(!wordMap.containsKey(word)){
+            System.out.println("word is not in WordMap");
+            return null;
+        }
+        ArrayList<Review> reviews = new ArrayList<>();
+        ArrayList<WordMapEntry> entries = wordMap.get(word);
+
+        for(WordMapEntry entry: entries){
+            reviews.add(entry.getReview());
+        }
+        return reviews;
+    }
     public String getSpecificHotelName(String hotelId){
         return hotelMap.get(hotelId).getF();
     }

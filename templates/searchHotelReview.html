@@ -10,13 +10,13 @@
 <body>
 
 #if($name != "anonymous")
-<h5>Hello, $name! </h5>
+<h3>Hello, $name! </h3>
 #end
-
+<div class="container pt-3 my-3 border justify-content-center">
 <p>Please enter city name and keyword to search hotels:</p>
 
 <form action="/searchHotel" method="post">
-    <table border="0">
+    <table border="1">
         <tr>
             <td>City:</td>
             <td><input type="text" size="30" name="city" ></td>
@@ -28,7 +28,21 @@
     </table>
     <p><input type="submit" value="Enter"></p>
 </form>
+</div>
 
+<div class="container pt-3 my-3 border justify-content-center">
+<p>Please enter keyword to search reviews:</p>
+
+<form action="/searchReview" method="get">
+    <table border="1">
+        <tr>
+            <td>keyword:</td>
+            <td><input type="text" size="30" name="keyword" ></td>
+        </tr>
+    </table>
+    <p><input type="submit" value="Enter"></p>
+</form>
+</div>
 </body>
 </html>
 

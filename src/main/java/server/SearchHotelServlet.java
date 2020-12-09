@@ -41,14 +41,14 @@ public class SearchHotelServlet extends LoginBaseServlet {
         PrintWriter out = response.getWriter();
 
         String name = getUsername(request);
-        String date = getDate();
+       // String date = getDate();
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
-        Template template = ve.getTemplate("templates/searchHotel.html");
+        Template template = ve.getTemplate("templates/searchHotelReview.html");
 
         context.put("name", name);
-        context.put("date",date);
+      //  context.put("date",date);
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
 
@@ -83,7 +83,7 @@ public class SearchHotelServlet extends LoginBaseServlet {
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
-        Template template = ve.getTemplate("templates/recommendedHotels.html");
+        Template template = ve.getTemplate("templates/recommendHotels.html");
 
         city = StringEscapeUtils.escapeHtml4(city);
         keyword = StringEscapeUtils.escapeHtml4(keyword);

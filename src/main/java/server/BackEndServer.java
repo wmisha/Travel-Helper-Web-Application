@@ -33,6 +33,7 @@ public class BackEndServer {
         context1.addServlet(WelcomeServlet.class, "/welcome");
         context1.addServlet(new ServletHolder(new SearchHotelServlet(resources)), "/searchHotel");
         context1.addServlet(new ServletHolder(new HotelServlet(resources)), "/hotelInfo");
+        context1.addServlet(new ServletHolder(new SearchReviewServlet(resources)), "/searchReview");
 
 
         // initialize Velocity
