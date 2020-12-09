@@ -17,7 +17,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
-public class HotelServlet extends HttpServlet {
+public class HotelServlet extends LoginBaseServlet {
 
     private ThreadSafeHotelDatabase db;
 
@@ -43,13 +43,14 @@ public class HotelServlet extends HttpServlet {
         String hotelName = db.getSpecificHotelName(hotelId);
         String hotelAddress = db.getSpecificHotelAddress(hotelId);
         List<Review> reviews = db.getReviews(hotelId);
-//        String name = getUsername(request);
-//        String date = getDate();
+        String name = getUsername(request);
+        String date = getDate();
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("templates/hotel.html");
 
+       context.put("date",date);
        context.put("hotelName", hotelName);
        context.put("hotelAddress", hotelAddress);
        context.put("reviews", reviews);

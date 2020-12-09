@@ -17,6 +17,40 @@
     <h5>$hotelAddress</h5>
 </div>
 <div class="container pt-3 my-3 border">
+    <form action="/addReview" method="post">
+        <div class="form-group">
+            <label for="rating">Select list (select one):</label>
+            <select class="form-control" id="rating" name="rating">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+<!--            <label for="rating">rating:</label>-->
+<!--            <input type="text" class="form-control" id="rating" placeholder="Enter email" name="rating">-->
+        </div>
+        <div class="form-group">
+            <label for="titel">titel:</label>
+            <input type="text" class="form-control" id="titel" placeholder="Enter title" name="title">
+        </div>
+        <div class="form-group">
+            <label for="text">text:</label>
+            <input type="text" class="form-control" id="text" placeholder="Enter text" name="text">
+        </div>
+        <div class="form-group">
+            <label for="customer">customer:</label>
+            <input type="text" class="form-control" id="customer" placeholder="Enter name" name="customer">
+        </div>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" name="remember"> Remember me
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+<div class="container pt-3 my-3 border">
     <h2>Reviews: </h2>
 
     <table class="table table-bordered">
@@ -58,6 +92,7 @@
 
 <resource name="style1.css" type="download" location="style1.css">
 </resource>
+<p style="font-size: 10pt; font-style: italic;">Last updated at $date.</p>
 
 </body>
 </html>

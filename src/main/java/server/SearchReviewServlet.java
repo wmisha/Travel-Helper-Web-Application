@@ -43,11 +43,13 @@ public class SearchReviewServlet extends LoginBaseServlet {
 
         ArrayList<Review> reviews = db.getReviewsFromWordMap(word);
 
+
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("templates/recommendReviews.html");
 
         context.put("reviews", reviews);
+        context.put("db",db);
 
 
         StringWriter writer = new StringWriter();

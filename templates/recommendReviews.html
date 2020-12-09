@@ -12,17 +12,18 @@
 
 
 <body>
-<div class="container pt-3 my-3 border justify-content-center">
-    #foreach($review in $reviews)
-        <h3>$review.getHotelId()</h3>
-        <h5>$review.getHotelName()</h5>
-    #end
-</div>
+
 <div class="container pt-3 my-3 border">
+
     <h2>Reviews: </h2>
     <table class="table table-bordered">
         <thead>
         <tr>
+
+        </tr>
+        <tr>
+            <th>hotelId</th>
+            <th>hotelName</th>
             <th>title</th>
             <th>text</th>
             <th>customer</th>
@@ -32,10 +33,15 @@
         <tbody>
         #foreach($review in $reviews)
         <tr>
-            <td>$review.getTitle()</a></td>
+
+        </tr>
+        <tr>
+            <td>$review.getHotelId()</td>
+            <td><a href="http://localhost:8090/hotelInfo?hotelId=$review.getHotelId()">$db.getSpecificHotelName($review.getHotelId())</a></td>
+            <td>$review.getTitle()</td>
             <td>$review.getReviewText()</td>
             <td>$review.getUserNickname()</a></td>
-            <td>$review.getDate()</a></td>
+            <td>$review.getDate()</td>
 
         </tr>
         #end

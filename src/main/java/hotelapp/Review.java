@@ -31,6 +31,9 @@ public class Review implements Comparable<Review> {
         this.userNickname = userNickname;
 
     }
+    public String getHotelName(){
+        return "Name";
+    }
     public int getRatingOverall(){
         return ratingOverall;
     }
