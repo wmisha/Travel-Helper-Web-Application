@@ -12,7 +12,7 @@ import java.io.StringWriter;
 
 
 
-public class UserRegisterServlet extends LoginBaseServlet {
+public class UserRegisterServlet extends BaseServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {

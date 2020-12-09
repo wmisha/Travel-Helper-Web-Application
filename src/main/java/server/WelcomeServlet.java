@@ -16,7 +16,7 @@ import java.io.StringWriter;
  * @see BackEndServer
  */
 @SuppressWarnings("serial")
-public class WelcomeServlet extends LoginBaseServlet {
+public class WelcomeServlet extends BaseServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)

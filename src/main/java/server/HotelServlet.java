@@ -1,7 +1,5 @@
 package server;
 
-import com.google.gson.JsonObject;
-import hotelapp.HotelDatabase;
 import hotelapp.Review;
 import hotelapp.ThreadSafeHotelDatabase;
 import org.apache.commons.text.StringEscapeUtils;
@@ -10,7 +8,6 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,10 +15,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
-public class HotelServlet extends LoginBaseServlet {
+public class HotelServlet extends BaseServlet {
 
     private ThreadSafeHotelDatabase db;
 
@@ -46,19 +42,6 @@ public class HotelServlet extends LoginBaseServlet {
         String date = getDate();
         String hotelId = request.getParameter("hotelId");
         System.out.println( "hotelId: ..........." +hotelId);
-//        String rating = request.getParameter("rating");
-//        String title = request.getParameter("title");
-//        String text = request.getParameter("text");
-//        String customer = request.getParameter("customer");
-//
-//
-//        if (hotelId != null && rating != null && title != null && text != null) {
-//            rating = StringEscapeUtils.escapeHtml4(rating);
-//            title = StringEscapeUtils.escapeHtml4(title);
-//            text = StringEscapeUtils.escapeHtml4(text);
-//            customer = StringEscapeUtils.escapeHtml4(customer);
-//            db.AddNewReviewToHotelMap(hotelId,Integer.parseInt(rating),title,text,customer,date);
-//        }
 
         String hotelName = db.getSpecificHotelName(hotelId);
         String hotelAddress = db.getSpecificHotelAddress(hotelId);

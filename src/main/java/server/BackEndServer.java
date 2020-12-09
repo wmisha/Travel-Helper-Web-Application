@@ -76,9 +76,17 @@ public class BackEndServer {
         String reviewsDir = map.get("-reviews");
 
         ThreadSafeHotelDatabase db = new ThreadSafeHotelDatabase();
-        ThreadSafeParseFiles passFiles = new ThreadSafeParseFiles(Integer.parseInt("3"));
+        ThreadSafeParseFiles passFiles = new ThreadSafeParseFiles(3);
         HotelSearch hotelSearch = new HotelSearch(db, passFiles);
         hotelSearch.getDataReady(hotelsFile, reviewsDir);
+
+        // 1. ThreadSafeParseFiles passFiles = new ThreadSafeParseFiles(3);
+        // 2. ThreadSafeHotelDatabase db = new ThreadSafeHotelDatabase(passFiles);
+        //            |
+        //             \
+        //               --->  passFiles.parseData();
+        //                     db will get an instance of the singleton DatabaseHandler
+        //                     MySQL "INSERT INTO" statements for Hotels and Reviews.
 
         BackEndServer backEndServer = new BackEndServer(db);
         try {

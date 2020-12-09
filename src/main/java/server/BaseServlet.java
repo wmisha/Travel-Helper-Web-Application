@@ -22,10 +22,10 @@ import java.util.Map;
  * @see BackEndServer
  */
 @SuppressWarnings("serial")
-public class LoginBaseServlet extends HttpServlet {
+public class BaseServlet extends HttpServlet {
 
 	protected static Logger log = LogManager.getLogger();
-	protected static final LoginDatabaseHandler dbhandler = LoginDatabaseHandler.getInstance();
+	protected static final DatabaseHandler dbhandler = DatabaseHandler.getInstance();
 
 	protected void prepareResponse(String title, HttpServletResponse response) {
 		try {

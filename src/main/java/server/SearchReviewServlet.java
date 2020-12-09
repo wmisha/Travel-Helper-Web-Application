@@ -1,25 +1,20 @@
 package server;
 
-import com.google.gson.JsonObject;
-import hotelapp.HotelDatabase;
 import hotelapp.Review;
 import hotelapp.ThreadSafeHotelDatabase;
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.List;
 
-public class SearchReviewServlet extends LoginBaseServlet {
+public class SearchReviewServlet extends BaseServlet {
 
     private ThreadSafeHotelDatabase db;
 
