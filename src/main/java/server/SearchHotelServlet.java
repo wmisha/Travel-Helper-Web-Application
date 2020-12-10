@@ -1,7 +1,5 @@
 package server;
 
-import hotelapp.HotelDatabase;
-import hotelapp.ThreadSafeHotelDatabase;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -13,14 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 
 public class SearchHotelServlet extends BaseServlet {
-    ThreadSafeHotelDatabase db;
+    protected static final DatabaseHandler dbHandler = DatabaseHandler.getInstance();
 
-    public SearchHotelServlet(ThreadSafeHotelDatabase db) {
-        this.db = db;
-    }
+
 
     /**
      * This method corresponding with the request's Get method.
@@ -62,6 +57,7 @@ public class SearchHotelServlet extends BaseServlet {
 
 
         PrintWriter out = response.getWriter();
+        String name = getUsername(request);
 
         String city = request.getParameter("city");
         System.out.println("Parameter city:  " + city);
@@ -72,9 +68,9 @@ public class SearchHotelServlet extends BaseServlet {
             response.sendRedirect("/searchHotel");
             return;
         }
+     //   String sql = "select * from hotels where city=" + city + and
 
-        String name = getUsername(request);
-        ArrayList<HotelDatabase.HotelMapEntry> hotels;
+
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
@@ -82,10 +78,9 @@ public class SearchHotelServlet extends BaseServlet {
 
         city = StringEscapeUtils.escapeHtml4(city);
         keyword = StringEscapeUtils.escapeHtml4(keyword);
-        hotels = db.putSuggestionHotelsInJson(city,keyword);
 
         context.put("name", name);
-        context.put("hotels",hotels);
+      //  context.put("hotels",hotels);
 
         StringWriter writer = new StringWriter();
         template.merge(context, writer);

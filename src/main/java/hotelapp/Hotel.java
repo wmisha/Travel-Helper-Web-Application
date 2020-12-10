@@ -20,6 +20,7 @@ public class Hotel{
     private String pr;
     private String c;
     private Position ll;
+
     private String link = "https://www.expedia.com/";
     private List<Review> reviews;
     private HashSet<String> reviewIds;
@@ -115,12 +116,12 @@ public class Hotel{
     }
 
 
-    public void sortReviews() {
-        if (reviews != null) {
-            //System.out.println("This review: " + reviews);
-            Collections.sort(reviews);
-        }
-    }
+//    public void sortReviews() {
+//        if (reviews != null) {
+//            //System.out.println("This review: " + reviews);
+//            Collections.sort(reviews);
+//        }
+//    }
 
     public void printReviews() {
         for (Review r : this.reviews) {

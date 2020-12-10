@@ -3,6 +3,8 @@ package hotelapp;
 import com.google.gson.annotations.SerializedName;
 
 public class Position {
+
+
     @SerializedName(value = "lat")
     private String latitude;
     @SerializedName(value = "lng")

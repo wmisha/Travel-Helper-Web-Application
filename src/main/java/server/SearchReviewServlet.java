@@ -1,7 +1,6 @@
 package server;
 
 import hotelapp.Review;
-import hotelapp.ThreadSafeHotelDatabase;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -16,11 +15,6 @@ import java.util.ArrayList;
 
 public class SearchReviewServlet extends BaseServlet {
 
-    private ThreadSafeHotelDatabase db;
-
-    public SearchReviewServlet(ThreadSafeHotelDatabase db) {
-        this.db = db;
-    }
 
     /**
      * This method corresponding with the request's Get method.
@@ -36,15 +30,15 @@ public class SearchReviewServlet extends BaseServlet {
         String word = request.getParameter("keyword");
         System.out.println("word: " + word);
 
-        ArrayList<Review> reviews = db.getReviewsFromWordMap(word);
+
 
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("templates/recommendReviews.html");
 
-        context.put("reviews", reviews);
-        context.put("db",db);
+//        context.put("reviews", );
+//        context.put("db",db);
 
 
         StringWriter writer = new StringWriter();

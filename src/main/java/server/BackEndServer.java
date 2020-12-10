@@ -1,8 +1,5 @@
 package server;
 
-import hotelapp.HotelSearch;
-import hotelapp.ThreadSafeHotelDatabase;
-import hotelapp.ThreadSafeParseFiles;
 import org.apache.velocity.app.VelocityEngine;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -10,18 +7,12 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Path;
 
 
 public class BackEndServer {
     public static final int PORT = 8090;
-    private ThreadSafeHotelDatabase resources;
-
-    public BackEndServer(ThreadSafeHotelDatabase resources) {
-        this.resources = resources;
-    }
-
+    protected static final DatabaseHandler dbHandler = DatabaseHandler.getInstance();
     public void start(){
         Server server = new Server(PORT);
         // Context 1 =
@@ -31,9 +22,9 @@ public class BackEndServer {
         context1.addServlet(UserRegisterServlet.class, "/register");
         context1.addServlet(UserLoginServlet.class, "/login");
         context1.addServlet(WelcomeServlet.class, "/welcome");
-        context1.addServlet(new ServletHolder(new SearchHotelServlet(resources)), "/searchHotel");
-        context1.addServlet(new ServletHolder(new HotelServlet(resources)), "/hotelInfo");
-        context1.addServlet(new ServletHolder(new SearchReviewServlet(resources)), "/searchReview");
+        context1.addServlet(new ServletHolder(new SearchHotelServlet()), "/searchHotel");
+        context1.addServlet(new ServletHolder(new HotelServlet()), "/hotelInfo");
+        context1.addServlet(new ServletHolder(new SearchReviewServlet()), "/searchReview");
 
 
         // initialize Velocity
@@ -47,7 +38,7 @@ public class BackEndServer {
 
         ServletContextHandler context2 = new ServletContextHandler();
         context2.setContextPath("/hotel");
-        context2.addServlet(HotelInfoServlet.class, "/");
+      //  context2.addServlet(HotelInfoServlet.class, "/");
         context2.addServlet(SearchReviewServlet.class, "/review");
 
 
@@ -64,21 +55,7 @@ public class BackEndServer {
     }
 
     public static void main(String[] args){
-        if (args.length < 2) {
-            System.out.println("provide -hotels or -reviews");
-            System.exit(-1);
-        }
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < args.length; i = i + 2) {
-            map.putIfAbsent(args[i], args[i + 1]);
-        }
-        String hotelsFile = map.get("-hotels");
-        String reviewsDir = map.get("-reviews");
 
-        ThreadSafeHotelDatabase db = new ThreadSafeHotelDatabase();
-        ThreadSafeParseFiles passFiles = new ThreadSafeParseFiles(3);
-        HotelSearch hotelSearch = new HotelSearch(db, passFiles);
-        hotelSearch.getDataReady(hotelsFile, reviewsDir);
 
         // 1. ThreadSafeParseFiles passFiles = new ThreadSafeParseFiles(3);
         // 2. ThreadSafeHotelDatabase db = new ThreadSafeHotelDatabase(passFiles);
@@ -88,7 +65,11 @@ public class BackEndServer {
         //                     db will get an instance of the singleton DatabaseHandler
         //                     MySQL "INSERT INTO" statements for Hotels and Reviews.
 
-        BackEndServer backEndServer = new BackEndServer(db);
+        BackEndServer backEndServer = new BackEndServer();
+//        LoadJsonToTables loadJsonToTables = new LoadJsonToTables("input/hotels/hotels.json","input/reviews");
+//        Path path = loadJsonToTables.getPath();
+//        loadJsonToTables.parseHotels();
+//        loadJsonToTables.traverseReviews(path);
         try {
             backEndServer.start();
 

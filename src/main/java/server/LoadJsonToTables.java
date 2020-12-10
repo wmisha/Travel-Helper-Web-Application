@@ -39,7 +39,8 @@ public class LoadJsonToTables {
 
             Hotel[] hotels = gson.fromJson(jsonArr, Hotel[].class);
             for (Hotel h : hotels) {
-                dbHandler.insertValueToHotels(h.getId(),h.getF(),h.getFullAddress(),h.getLink());
+                dbHandler.insertValueToHotels(h.getId(),h.getF(),h.getFullAddress(),h.getCi(),
+                        h.getPosition().getLatitude(),h.getPosition().getLongitude(),h.getLink());
             }
         } catch (IOException e) {
             System.out.println("Could not read the file: " + e);
@@ -86,14 +87,7 @@ public class LoadJsonToTables {
         }
 
     }
-    public static void main(String[] args){
-        LoadJsonToTables loadJsonToTables = new LoadJsonToTables("input/hotels.json","input/reviews");
-        Path path = loadJsonToTables.getPath();
-        loadJsonToTables.parseHotels();
-        loadJsonToTables.traverseReviews(path);
 
-
-    }
 
 }
 

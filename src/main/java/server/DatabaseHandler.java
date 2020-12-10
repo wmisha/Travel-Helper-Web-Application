@@ -38,10 +38,13 @@ public class DatabaseHandler {
 
     private static final String CREATE_hotels =
             "CREATE TABLE IF NOT EXISTS hotels (" +
-                    "hotelId VARCHAR(55) PRIMARY KEY, " +
-                    "name VARCHAR(255)," +
+                    "hotelId VARCHAR(55) PRIMARY KEY," +
+                    "name VARCHAR(55)," +
                     "address VARCHAR(255)," +
-                    "link VARCHAR(255);" ;
+                    "city VARCHAR(55)," +
+                    "lat VARCHAR(255),"+
+                    "lng VARCHAR(255)," +
+                    "link VARCHAR(255));" ;
 
 
     private static final String CREATE_reviews =
@@ -52,8 +55,8 @@ public class DatabaseHandler {
                     "title VARCHAR(500)," +
                     "reviewText  VARCHAR(2000)," +
                     "customer VARCHAR(35)," +
-                    "date        DATE ),"+
-                    "userId INTEGER;";
+                    "date        DATE ,"+
+                    "userId INTEGER);";
 
 
     /**
@@ -118,10 +121,10 @@ public class DatabaseHandler {
             db = new DatabaseConnector("database.properties");
             status = db.testConnection() ? setupTables() : Status.CONNECTION_FAILED;
             //populate data to hotels and reviews tables
-            LoadJsonToTables loadJsonToTables = new LoadJsonToTables("input/hotels.json","input/reviews");
-            Path path = loadJsonToTables.getPath();
-            loadJsonToTables.parseHotels();
-            loadJsonToTables.traverseReviews(path);
+//            LoadJsonToTables loadJsonToTables = new LoadJsonToTables("input/hotels/hotels.json","input/reviews");
+//            Path path = loadJsonToTables.getPath();
+//            loadJsonToTables.parseHotels();
+//            loadJsonToTables.traverseReviews(path);
 
         } catch (FileNotFoundException e) {
             status = Status.MISSING_CONFIG;
@@ -165,19 +168,21 @@ public class DatabaseHandler {
                 Statement statement = connection.createStatement();
         ) {
             // Drop all tables and start fresh
-            //statement.executeUpdate("DROP TABLE IF EXISTS 'Users';");
-            //statement.executeUpdate("DROP TABLE IF EXISTS 'Hotels';");
-            //statement.executeUpdate("DROP TABLE IF EXISTS 'Reviews';");
+            statement.executeUpdate("DROP TABLE IF EXISTS users;");
+            statement.executeUpdate("DROP TABLE IF EXISTS hotels;");
+            statement.executeUpdate("DROP TABLE IF EXISTS reviews;");
 
             // In case table missing, must create
+
             statement.executeUpdate(CREATE_users);
             statement.executeUpdate(CREATE_hotels);
             statement.executeUpdate(CREATE_reviews);
 
+
             // Check if create was successful
-            if (!(statement.executeQuery("SHOW TABLE LIKE 'users';").next()
-                    && statement.executeQuery("SHOW TABLE LIKE 'hotels';").next()
-                    && statement.executeQuery("SHOW TABLE LIKE 'reviews';").next()
+            if (!(statement.executeQuery("SHOW TABLES LIKE 'users';").next()
+                    && statement.executeQuery("SHOW TABLES LIKE 'hotels';").next()
+                    && statement.executeQuery("SHOW TABLES LIKE 'reviews';").next()
             )) {
                 status = Status.CREATE_FAILED;
             } else {
@@ -191,6 +196,7 @@ public class DatabaseHandler {
             //populateTables();
 
         } catch (Exception ex) {
+            System.out.println(ex);
             status = Status.CREATE_FAILED;
             log.debug(status, ex);
         }
@@ -527,7 +533,7 @@ public class DatabaseHandler {
         return status;
     }
 
-    public void insertValueToHotels(String hotelId, String name,String address,String link) {
+    public void insertValueToHotels(String hotelId, String name,String address,String city,String lat,String lng, String link) {
 
         Connection connection = null;
         try {
@@ -537,7 +543,10 @@ public class DatabaseHandler {
             sql.setString(1, hotelId);
             sql.setString(2, name);
             sql.setString(3, address);
-            sql.setString(4, link);
+            sql.setString(4, city);
+            sql.setString(5, lat);
+            sql.setString(6, lng);
+            sql.setString(7, link);
             sql.executeUpdate();
         } catch (SQLException throwable) {
             throwable.printStackTrace();

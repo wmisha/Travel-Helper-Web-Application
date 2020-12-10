@@ -1,7 +1,6 @@
 package server;
 
 import hotelapp.Review;
-import hotelapp.ThreadSafeHotelDatabase;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -19,11 +18,8 @@ import java.util.List;
 
 public class HotelServlet extends BaseServlet {
 
-    private ThreadSafeHotelDatabase db;
 
-    public HotelServlet(ThreadSafeHotelDatabase db) {
-        this.db = db;
-    }
+
 
     /**
      * This method corresponding with the request's Get method.
@@ -43,9 +39,7 @@ public class HotelServlet extends BaseServlet {
         String hotelId = request.getParameter("hotelId");
         System.out.println( "hotelId: ..........." +hotelId);
 
-        String hotelName = db.getSpecificHotelName(hotelId);
-        String hotelAddress = db.getSpecificHotelAddress(hotelId);
-        List<Review> reviews = db.getReviews(hotelId);
+
         String name = getUsername(request);
 
 
@@ -54,9 +48,7 @@ public class HotelServlet extends BaseServlet {
         Template template = ve.getTemplate("templates/hotel.html");
        context.put("hotelId",hotelId);
        context.put("date",date);
-       context.put("hotelName", hotelName);
-       context.put("hotelAddress", hotelAddress);
-       context.put("reviews", reviews);
+
 
 
         StringWriter writer = new StringWriter();
@@ -97,7 +89,7 @@ public class HotelServlet extends BaseServlet {
         title = StringEscapeUtils.escapeHtml4(title);
         text = StringEscapeUtils.escapeHtml4(text);
         customer = StringEscapeUtils.escapeHtml4(customer);
-        db.AddNewReviewToHotelMap(hotelId,Integer.parseInt(rating),title,text,customer,date);
+
         out.println("<h2>Successfully add a review!</h2>");
         out.println();
         response.sendRedirect("/hotelInfo?hotelId=" + hotelId);
