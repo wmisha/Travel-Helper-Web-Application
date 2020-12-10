@@ -39,23 +39,23 @@ public class DatabaseHandler {
     private static final String CREATE_hotels =
             "CREATE TABLE IF NOT EXISTS hotels (" +
                     "hotelId VARCHAR(55) PRIMARY KEY," +
-                    "name VARCHAR(55)," +
+                    "name VARCHAR(255)," +
                     "address VARCHAR(255)," +
-                    "city VARCHAR(55)," +
-                    "lat VARCHAR(255),"+
+                    "city VARCHAR(255)," +
+                    "lat VARCHAR(255)," +
                     "lng VARCHAR(255)," +
-                    "link VARCHAR(255));" ;
+                    "link VARCHAR(255));";
 
 
     private static final String CREATE_reviews =
             "CREATE TABLE IF NOT EXISTS reviews (" +
                     "reviewId VARCHAR(255) PRIMARY KEY, " +
-                    "hotelId VARCHAR(55)," +
+                    "hotelId VARCHAR(255)," +
                     "rating INTEGER," +
                     "title VARCHAR(500)," +
                     "reviewText  VARCHAR(2000)," +
-                    "customer VARCHAR(35)," +
-                    "date        DATE ,"+
+                    "customer VARCHAR(255)," +
+                    "date        DATE ," +
                     "userId INTEGER);";
 
 
@@ -66,10 +66,10 @@ public class DatabaseHandler {
             "INSERT INTO users (username, password, userSalt) " +
                     "VALUES (?, ?, ?);";
     private static final String Insert_hotels =
-            "Insert into hotels (hotelId,name,address,link)" +
-                    "VALUES(?,?,?,?);";
+            "Insert ignore into hotels (hotelId,name,address,city,lat,lng,link)" +
+                    "VALUES(?,?,?,?,?,?,?);";
     private static final String Insert_reviews =
-            "Insert into reviews(reviewId, hotelId,rating,title,reviewText,customer,date, userId)" +
+            "Insert ignore into reviews(reviewId, hotelId,rating,title,reviewText,customer,date,userId)" +
                     "VALUES(?,?,?,?,?,?,?,?);";
 
     /**
@@ -102,6 +102,9 @@ public class DatabaseHandler {
      */
     private DatabaseConnector db;
 
+    public DatabaseConnector getDb() {
+        return db;
+    }
 
     /**
      * Used to generate password hash salt for user.
@@ -120,11 +123,7 @@ public class DatabaseHandler {
             // Change to "database.properties" or whatever your file is called
             db = new DatabaseConnector("database.properties");
             status = db.testConnection() ? setupTables() : Status.CONNECTION_FAILED;
-            //populate data to hotels and reviews tables
-//            LoadJsonToTables loadJsonToTables = new LoadJsonToTables("input/hotels/hotels.json","input/reviews");
-//            Path path = loadJsonToTables.getPath();
-//            loadJsonToTables.parseHotels();
-//            loadJsonToTables.traverseReviews(path);
+
 
         } catch (FileNotFoundException e) {
             status = Status.MISSING_CONFIG;
@@ -168,16 +167,14 @@ public class DatabaseHandler {
                 Statement statement = connection.createStatement();
         ) {
             // Drop all tables and start fresh
-            statement.executeUpdate("DROP TABLE IF EXISTS users;");
-            statement.executeUpdate("DROP TABLE IF EXISTS hotels;");
-            statement.executeUpdate("DROP TABLE IF EXISTS reviews;");
+            //  statement.executeUpdate("DROP TABLE IF EXISTS users;");
+            //  statement.executeUpdate("DROP TABLE IF EXISTS hotels;");
+            //  statement.executeUpdate("DROP TABLE IF EXISTS reviews;");
 
             // In case table missing, must create
-
             statement.executeUpdate(CREATE_users);
             statement.executeUpdate(CREATE_hotels);
             statement.executeUpdate(CREATE_reviews);
-
 
             // Check if create was successful
             if (!(statement.executeQuery("SHOW TABLES LIKE 'users';").next()
@@ -190,18 +187,23 @@ public class DatabaseHandler {
                 status = Status.OK;
             }
 
-            // Populate tables
-
-            // WE NEED TO LOAD EVERYTHING FROM THE JSON AND INSERT INTO Hotels AND Reivews TABLES!!
-            //populateTables();
-
         } catch (Exception ex) {
             System.out.println(ex);
+            ex.printStackTrace();
             status = Status.CREATE_FAILED;
             log.debug(status, ex);
         }
 
         return status;
+    }
+
+    public void populateTables(String hotelFile, String reviewDir) {
+        LoadJsonToTables loadJsonToTables = new LoadJsonToTables(hotelFile, reviewDir);
+        Path path = loadJsonToTables.getPath();
+        loadJsonToTables.parseHotels();
+        System.out.println("finish parse hotel.");
+        loadJsonToTables.traverseReviews(path);
+        System.out.println("finish parsing review!");
     }
 
     /**
@@ -533,12 +535,12 @@ public class DatabaseHandler {
         return status;
     }
 
-    public void insertValueToHotels(String hotelId, String name,String address,String city,String lat,String lng, String link) {
+    public void insertValueToHotels(String hotelId, String name, String address, String city, String lat, String lng, String link) {
 
         Connection connection = null;
         try {
-            connection = db.getConnection();
 
+            connection = db.getConnection();
             PreparedStatement sql = connection.prepareStatement(Insert_hotels);
             sql.setString(1, hotelId);
             sql.setString(2, name);
@@ -548,24 +550,26 @@ public class DatabaseHandler {
             sql.setString(6, lng);
             sql.setString(7, link);
             sql.executeUpdate();
+
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
     }
-    public Status insertValuesToReviews(String reviewId,String hotelId,int rating, String title,
-                                        String reviewText,String customer,String date, int userId ){
+
+    public Status insertValuesToReviews(String reviewId, String hotelId, int rating, String title,
+                                        String reviewText, String customer, String date, int userId) {
         Status status;
         log.debug("Inserting " + reviewId + ".");
 
         // make sure we have non-null and non-emtpy values for login
-        if (isBlank(rating+"") || isBlank(reviewText) || isBlank(title)) {
+        if (isBlank(rating + "") || isBlank(reviewText) || isBlank(title)) {
             status = Status.INVALID_LOGIN;
             log.debug(status);
             return status;
         }
 
         // try to connect to database
-        System.out.println(db);
+        //  System.out.println(db);
 
         try (
                 Connection connection = db.getConnection();

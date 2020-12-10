@@ -13,6 +13,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
 
 public class LoadJsonToTables {
 
@@ -38,6 +39,7 @@ public class LoadJsonToTables {
             JsonArray jsonArr = jo.getAsJsonArray("sr"); // array of Json
 
             Hotel[] hotels = gson.fromJson(jsonArr, Hotel[].class);
+
             for (Hotel h : hotels) {
                 dbHandler.insertValueToHotels(h.getId(),h.getF(),h.getFullAddress(),h.getCi(),
                         h.getPosition().getLatitude(),h.getPosition().getLongitude(),h.getLink());
@@ -45,7 +47,6 @@ public class LoadJsonToTables {
         } catch (IOException e) {
             System.out.println("Could not read the file: " + e);
         }
-        System.out.println("finish parsing hotel");
     }
    public Path getPath(){
         return Paths.get(reviewsDir);
@@ -57,13 +58,14 @@ public class LoadJsonToTables {
                 if (Files.isDirectory(entry)) {
                     traverseReviews(entry);
                 } else {
+                   //System.out.println("File processing: " + entry.toString());
                     parseReview(entry.toString());
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("finish parsing review............");
+
     }
     public void parseReview(String filePath) {
         Review[] reviews;
@@ -85,6 +87,14 @@ public class LoadJsonToTables {
         } catch (IOException e) {
             System.out.println("Could not read the file: " + e);
         }
+
+    }
+    public static void main(String[] args){
+        LoadJsonToTables loadJsonToTables = new LoadJsonToTables("input/hotels.json","input/reviews");
+        Path path = loadJsonToTables.getPath();
+        loadJsonToTables.parseHotels();
+        loadJsonToTables.traverseReviews(path);
+
 
     }
 

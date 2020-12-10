@@ -26,6 +26,7 @@ public class DatabaseConnector {
 
 	/** Properties with username and password for connecting to database. */
 	private final Properties login;
+	private Connection connection;
 
 	/**
 	 * Creates a connector from a "database.properties" file located in the
@@ -102,8 +103,9 @@ public class DatabaseConnector {
 	 * @throws SQLException if unable to establish database connection
 	 */
 	public Connection getConnection() throws SQLException {
-		Connection dbConnection = DriverManager.getConnection(uri, login);
-		return dbConnection;
+
+		 Connection connection = DriverManager.getConnection(uri, login);
+		return connection;
 	}
 
 	/**

@@ -65,11 +65,9 @@ public class BackEndServer {
         //                     db will get an instance of the singleton DatabaseHandler
         //                     MySQL "INSERT INTO" statements for Hotels and Reviews.
 
-        BackEndServer backEndServer = new BackEndServer();
-//        LoadJsonToTables loadJsonToTables = new LoadJsonToTables("input/hotels/hotels.json","input/reviews");
-//        Path path = loadJsonToTables.getPath();
-//        loadJsonToTables.parseHotels();
-//        loadJsonToTables.traverseReviews(path);
+       BackEndServer backEndServer = new BackEndServer();
+       dbHandler.populateTables("input/hotels/hotels.json","input/reviews");
+
         try {
             backEndServer.start();
 

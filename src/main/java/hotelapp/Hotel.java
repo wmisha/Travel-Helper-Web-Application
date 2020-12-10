@@ -36,7 +36,7 @@ public class Hotel{
     }
     public String getLink(){
         String city= ci.replaceAll(" ","-");
-        return link + city +"-Hotels.h" + id +".Hotel-Information";
+        return "https://www.expedia.com/" + city +"-Hotels.h" + id +".Hotel-Information";
     }
     public int getAverageScore(){
         int averageScore = 0;
