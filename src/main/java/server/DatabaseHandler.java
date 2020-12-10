@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.sql.*;
 import java.util.Random;
@@ -28,68 +29,76 @@ public class DatabaseHandler {
     /**
      * Used to create necessary tables for this example.
      */
-    private static final String CREATE_Users =
-            "CREATE TABLE IF NOT EXISTS Users (" +
+    private static final String CREATE_users =
+            "CREATE TABLE IF NOT EXISTS users (" +
                     "userId INTEGER AUTO_INCREMENT PRIMARY KEY, " +
                     "username VARCHAR(32) NOT NULL UNIQUE, " +
                     "password CHAR(64) NOT NULL, " +
                     "userSalt CHAR(32) NOT NULL);";
 
-    private static final String CREATE_Hotels =
-            "CREATE TABLE IF NOT EXISTS Hotels (" +
-                    "hotelId INTEGER PRIMARY KEY, " +
+    private static final String CREATE_hotels =
+            "CREATE TABLE IF NOT EXISTS hotels (" +
+                    "hotelId VARCHAR(55) PRIMARY KEY, " +
                     "name VARCHAR(255)," +
                     "address VARCHAR(255)," +
-                    "link VARCHAR(255)," +
-                    "averageScore FLOAT);";
+                    "link VARCHAR(255);" ;
 
-    private static final String CREATE_Reviews =
-            "CREATE TABLE IF NOT EXISTS Reviews (" +
+
+    private static final String CREATE_reviews =
+            "CREATE TABLE IF NOT EXISTS reviews (" +
                     "reviewId VARCHAR(255) PRIMARY KEY, " +
-                    "hotelId INTEGER," +
+                    "hotelId VARCHAR(55)," +
                     "rating INTEGER," +
                     "title VARCHAR(500)," +
                     "reviewText  VARCHAR(2000)," +
                     "customer VARCHAR(35)," +
-                    "date        VARCHAR(35) );";
+                    "date        DATE ),"+
+                    "userId INTEGER;";
 
 
     /**
      * Used to insert a new user into the database.
      */
     private static final String REGISTER_SQL =
-            "INSERT INTO Users (username, password, userSalt) " +
+            "INSERT INTO users (username, password, userSalt) " +
                     "VALUES (?, ?, ?);";
+    private static final String Insert_hotels =
+            "Insert into hotels (hotelId,name,address,link)" +
+                    "VALUES(?,?,?,?);";
+    private static final String Insert_reviews =
+            "Insert into reviews(reviewId, hotelId,rating,title,reviewText,customer,date, userId)" +
+                    "VALUES(?,?,?,?,?,?,?,?);";
 
     /**
      * Used to determine if a username already exists.
      */
     private static final String USER_SQL =
-            "SELECT username FROM Users WHERE username = ?";
+            "SELECT username FROM users WHERE username = ?";
 
     /**
      * Used to retrieve the salt associated with a specific user.
      */
     private static final String SALT_SQL =
-            "SELECT userSalt FROM Users WHERE username = ?";
+            "SELECT userSalt FROM users WHERE username = ?";
 
     /**
      * Used to authenticate a user.
      */
     private static final String AUTH_SQL =
-            "SELECT username FROM Users " +
+            "SELECT username FROM users " +
                     "WHERE username = ? AND password = ?";
 
     /**
      * Used to remove a user from the database.
      */
     private static final String DELETE_SQL =
-            "DELETE FROM Users WHERE username = ?";
+            "DELETE FROM users WHERE username = ?";
 
     /**
      * Used to configure connection to database.
      */
     private DatabaseConnector db;
+
 
     /**
      * Used to generate password hash salt for user.
@@ -108,6 +117,12 @@ public class DatabaseHandler {
             // Change to "database.properties" or whatever your file is called
             db = new DatabaseConnector("database.properties");
             status = db.testConnection() ? setupTables() : Status.CONNECTION_FAILED;
+            //populate data to hotels and reviews tables
+            LoadJsonToTables loadJsonToTables = new LoadJsonToTables("input/hotels.json","input/reviews");
+            Path path = loadJsonToTables.getPath();
+            loadJsonToTables.parseHotels();
+            loadJsonToTables.traverseReviews(path);
+
         } catch (FileNotFoundException e) {
             status = Status.MISSING_CONFIG;
         } catch (IOException e) {
@@ -155,14 +170,14 @@ public class DatabaseHandler {
             //statement.executeUpdate("DROP TABLE IF EXISTS 'Reviews';");
 
             // In case table missing, must create
-            statement.executeUpdate(CREATE_Users);
-            statement.executeUpdate(CREATE_Hotels);
-            statement.executeUpdate(CREATE_Reviews);
+            statement.executeUpdate(CREATE_users);
+            statement.executeUpdate(CREATE_hotels);
+            statement.executeUpdate(CREATE_reviews);
 
             // Check if create was successful
-            if (!(statement.executeQuery("SHOW TABLE LIKE 'Users';").next()
-                    && statement.executeQuery("SHOW TABLE LIKE 'Hotels';").next()
-                    && statement.executeQuery("SHOW TABLE LIKE 'Reviews';").next()
+            if (!(statement.executeQuery("SHOW TABLE LIKE 'users';").next()
+                    && statement.executeQuery("SHOW TABLE LIKE 'hotels';").next()
+                    && statement.executeQuery("SHOW TABLE LIKE 'reviews';").next()
             )) {
                 status = Status.CREATE_FAILED;
             } else {
@@ -509,6 +524,66 @@ public class DatabaseHandler {
             log.debug(status, ex);
         }
 
+        return status;
+    }
+
+    public void insertValueToHotels(String hotelId, String name,String address,String link) {
+
+        Connection connection = null;
+        try {
+            connection = db.getConnection();
+
+            PreparedStatement sql = connection.prepareStatement(Insert_hotels);
+            sql.setString(1, hotelId);
+            sql.setString(2, name);
+            sql.setString(3, address);
+            sql.setString(4, link);
+            sql.executeUpdate();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+    }
+    public Status insertValuesToReviews(String reviewId,String hotelId,int rating, String title,
+                                        String reviewText,String customer,String date, int userId ){
+        Status status;
+        log.debug("Inserting " + reviewId + ".");
+
+        // make sure we have non-null and non-emtpy values for login
+        if (isBlank(rating+"") || isBlank(reviewText) || isBlank(title)) {
+            status = Status.INVALID_LOGIN;
+            log.debug(status);
+            return status;
+        }
+
+        // try to connect to database
+        System.out.println(db);
+
+        try (
+                Connection connection = db.getConnection();
+        ) {
+
+            try (
+                    PreparedStatement sql = connection.prepareStatement(Insert_reviews);
+            ) {
+                sql.setString(1, reviewId);
+                sql.setString(2, hotelId);
+                sql.setInt(3, rating);
+                sql.setString(4, title);
+                sql.setString(5, reviewText);
+                sql.setString(6, customer);
+                sql.setString(7, date);
+                sql.setInt(8, userId);
+                sql.executeUpdate();
+
+                status = Status.OK;
+            } catch (SQLException ex) {
+                status = Status.SQL_EXCEPTION;
+                log.debug(ex.getMessage(), ex);
+            }
+        } catch (SQLException ex) {
+            status = Status.CONNECTION_FAILED;
+            log.debug(status, ex);
+        }
         return status;
     }
 }

@@ -20,7 +20,7 @@ public class Hotel{
     private String pr;
     private String c;
     private Position ll;
-
+    private String link = "https://www.expedia.com/";
     private List<Review> reviews;
     private HashSet<String> reviewIds;
 
@@ -32,6 +32,10 @@ public class Hotel{
         this.pr = pr;
         this.c = c;
         this.ll = ll;
+    }
+    public String getLink(){
+        String city= ci.replaceAll(" ","-");
+        return link + city +"-Hotels.h" + id +".Hotel-Information";
     }
     public int getAverageScore(){
         int averageScore = 0;
@@ -112,9 +116,9 @@ public class Hotel{
 
 
     public void sortReviews() {
-        if (this.reviews != null) {
+        if (reviews != null) {
             //System.out.println("This review: " + reviews);
-            Collections.sort(this.reviews);
+            Collections.sort(reviews);
         }
     }
 

@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
  * This class is for storing review data from reviews folder
  */
 
-public class Review implements Comparable<Review> {
+public class Review  {
 
     private String  hotelId;
     private String reviewId;
@@ -40,6 +40,9 @@ public class Review implements Comparable<Review> {
         this.reviewText = reviewText;
         this.userNickname = userNickname;
         this.reviewSubmissionTime = reviewSubmissionTime;
+    }
+    public int getUserId(){
+        return -1;
     }
 
     public void setHotelId(String hotelId) {
@@ -94,11 +97,12 @@ public class Review implements Comparable<Review> {
             return "Anonymous";
         return userNickname;
     }
-    public LocalDate getDate(){
+    public String getDate(){
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
         // System.out.println("submission time: " + reviewSubmissionTime);
-        return LocalDate.parse(reviewSubmissionTime.substring(0,10), formatter);
+        return LocalDate.parse(reviewSubmissionTime.substring(0,10), formatter) + "";
     }
+
 
     @Override
     public String toString() {
@@ -122,24 +126,24 @@ public class Review implements Comparable<Review> {
         return jsonObject;
     }
 
-    @Override
-    public int compareTo(Review o) {
-//        OffsetDateTime date = OffsetDateTime.parse(this.reviewSubmissionTime);
-//        OffsetDateTime dateOther = OffsetDateTime.parse(o.reviewSubmissionTime);
-
-        // Using negative of compareTo in order to get newest first
-       // reviewSubmissionTime = reviewSubmissionTime.substring(0,10);
-        LocalDate date = getDate();
-
-        //System.out.println("Date: " + date);
-        int result = -date.compareTo(o.getDate());
-        if (result != 0) {
-            return result;
-        }
-
-        // Exact same time? sort using review ID string in ascending string order
-        return this.getReviewId().compareTo(o.getReviewId());
-        // reviews must be sorted by date (most recent one first),
-        // and if dates are the same, by review id (in increasing order of review id).
-    }
+//    @Override
+//    public int compareTo(Review o) {
+////        OffsetDateTime date = OffsetDateTime.parse(this.reviewSubmissionTime);
+////        OffsetDateTime dateOther = OffsetDateTime.parse(o.reviewSubmissionTime);
+//
+//        // Using negative of compareTo in order to get newest first
+//       // reviewSubmissionTime = reviewSubmissionTime.substring(0,10);
+//        LocalDate date = getDate();
+//
+//        //System.out.println("Date: " + date);
+//        int result = -date.compareTo(o.getDate());
+//        if (result != 0) {
+//            return result;
+//        }
+//
+//        // Exact same time? sort using review ID string in ascending string order
+//        return this.getReviewId().compareTo(o.getReviewId());
+//        // reviews must be sorted by date (most recent one first),
+//        // and if dates are the same, by review id (in increasing order of review id).
+//    }
 }
