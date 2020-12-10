@@ -30,69 +30,21 @@ public class SearchReviewServlet extends BaseServlet {
         String word = request.getParameter("keyword");
         System.out.println("word: " + word);
 
-
-
-
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("templates/recommendReviews.html");
 
-//        context.put("reviews", );
-//        context.put("db",db);
-
+        if (word == null) {
+            context.put("reviews", new ArrayList());
+            return;
+        }
+        ArrayList<Review> reviews = dbhandler.findReviews(word);
+        context.put("reviews", reviews);
 
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
         out.println(writer.toString());
 
-
-
-
-
-//        PrintWriter out = response.getWriter();
-//        String word = request.getParameter("word");
-//
-//        String name = getUsername(request);
-//        String date = getDate();
-//        ArrayList<Review> reviews = db.getReviewsFromWordMap(word);
-//
-//        VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
-//        VelocityContext context = new VelocityContext();
-//        Template template = ve.getTemplate("templates/searchReview.html");
-//
-//        context.put("name", name);
-//         context.put("date",date);
-//
-//        StringWriter writer = new StringWriter();
-//        template.merge(context, writer);
-//       // out.println(writer.toString());
-//
-//        if (name != null) {
-//            out.println(writer.toString());
-//        }
-//        else {
-//            response.sendRedirect("/login");
-//        }
-
-
-//        response.setContentType("application/json");
-//        response.setStatus(HttpServletResponse.SC_OK);
-//
-//        PrintWriter writer = response.getWriter();
-//        String word = request.getParameter("word");
-//        if (word == null) {
-//            JsonObject jsonObject = new JsonObject();
-//            jsonObject.addProperty("success", Boolean.FALSE);
-//            jsonObject.addProperty("word", "invalid");
-//            writer.println(jsonObject.toString());
-//            return;
-//        }
-//        String num = request.getParameter("num");
-//        word = StringEscapeUtils.escapeHtml4(word);
-//        num = StringEscapeUtils.escapeHtml4(num);
-//
-//        String words = db.index(word, num);
-//        writer.println(words);
     }
 
     @Override

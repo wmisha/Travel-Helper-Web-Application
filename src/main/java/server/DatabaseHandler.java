@@ -1,6 +1,7 @@
 package server;
 
 import hotelapp.Hotel;
+import hotelapp.Review;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.util.JsonUtils;
@@ -630,6 +631,37 @@ public class DatabaseHandler {
             log.debug(Status.SQL_EXCEPTION, ex);
         }
         return hotels;
+    }
+    public ArrayList<Review> findReviews(String keyword){
+        ArrayList<Review> reviews = new ArrayList<>();
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "select hotelId, name, title, reviewText, customer, date " +
+                                "from hotels natural join reviews " +
+                                "where reviewText like ?;");
+        ) {
+
+            sql.setString(1, "% " + keyword + " %");
+            ResultSet resultSet = sql.executeQuery();
+
+            while (resultSet.next()) {
+                reviews.add(new Review(
+                        resultSet.getString("hotelId"),
+                        resultSet.getString("name"),
+                        resultSet.getString("title"),
+                        resultSet.getString("reviewText"),
+                        resultSet.getString("customer"),
+                        resultSet.getString("date")
+                ));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+        return reviews;
+
     }
 
 

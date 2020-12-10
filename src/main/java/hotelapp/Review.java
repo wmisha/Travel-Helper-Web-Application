@@ -19,18 +19,20 @@ public class Review  {
     private String reviewText;
     private String reviewSubmissionTime;
     private String userNickname;
+    private String hotelName;
+    private String date;
 
-//    public Review(String hotelId, String reviewId, int ratingOverall,
-//                  String title, String reviewText, String reviewSubmissionTime,String userNickname) {
-//        this.hotelId = hotelId;
-//        this.reviewId = reviewId;
-//        this.ratingOverall = ratingOverall;
-//        this.title = title;
-//        this.reviewText = reviewText;
-//        this.reviewSubmissionTime = reviewSubmissionTime.substring(0,10);
-//        this.userNickname = userNickname;
-//
-//    }
+    public Review(String hotelId, String reviewId, int ratingOverall,
+                  String title, String reviewText, String reviewSubmissionTime,String userNickname) {
+        this.hotelId = hotelId;
+        this.reviewId = reviewId;
+        this.ratingOverall = ratingOverall;
+        this.title = title;
+        this.reviewText = reviewText;
+        this.reviewSubmissionTime = reviewSubmissionTime.substring(0,10);
+        this.userNickname = userNickname;
+
+    }
 
 
     public Review(String hotelId, int ratingOverall, String title, String reviewText,String userNickname, String reviewSubmissionTime) {
@@ -40,6 +42,19 @@ public class Review  {
         this.reviewText = reviewText;
         this.userNickname = userNickname;
         this.reviewSubmissionTime = reviewSubmissionTime;
+    }
+
+    public Review(String hotelId,String hotelName,String title,String reviewText,String customer,String date){
+        this.hotelId = hotelId;
+        this.hotelName = hotelName;
+        this.title = title;
+        this.reviewText = reviewText;
+        this.userNickname = customer;
+        this.date = date;
+    }
+
+    public String getHotelName(){
+        return this.hotelName;
     }
     public int getUserId(){
         return -1;
@@ -98,9 +113,7 @@ public class Review  {
         return userNickname;
     }
     public String getDate(){
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
-        // System.out.println("submission time: " + reviewSubmissionTime);
-        return LocalDate.parse(reviewSubmissionTime.substring(0,10), formatter) + "";
+      return this.date;
     }
 
 

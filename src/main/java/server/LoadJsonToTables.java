@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class LoadJsonToTables {
 
@@ -81,8 +83,11 @@ public class LoadJsonToTables {
 
             reviews = gson.fromJson(jsonArr, Review[].class);
             for (Review r : reviews) {
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE;
+                // System.out.println("submission time: " + reviewSubmissionTime);
+                 String date = LocalDate.parse(r.getReviewSubmissionTime().substring(0,10), formatter) + "";
                  dbHandler.insertValuesToReviews(r.getReviewId(), r.getHotelId(), r.getRatingOverall(),
-                        r.getTitle(), r.getReviewText(), r.getUserNickname(), r.getDate(), r.getUserId());
+                        r.getTitle(), r.getReviewText(), r.getUserNickname(), date, r.getUserId());
             }
         } catch (IOException e) {
             System.out.println("Could not read the file: " + e);
