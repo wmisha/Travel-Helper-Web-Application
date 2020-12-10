@@ -42,7 +42,7 @@ public class LoadJsonToTables {
 
             for (Hotel h : hotels) {
                 dbHandler.insertValueToHotels(h.getId(),h.getF(),h.getFullAddress(),h.getCi(),
-                        h.getPosition().getLatitude(),h.getPosition().getLongitude(),h.getLink());
+                        h.getPosition().getLatitude(),h.getPosition().getLongitude(),h.computeExpediaLink());
             }
         } catch (IOException e) {
             System.out.println("Could not read the file: " + e);

@@ -1,5 +1,6 @@
 package server;
 
+import hotelapp.Hotel;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -11,10 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class SearchHotelServlet extends BaseServlet {
     protected static final DatabaseHandler dbHandler = DatabaseHandler.getInstance();
-
 
 
     /**
@@ -31,21 +35,20 @@ public class SearchHotelServlet extends BaseServlet {
         PrintWriter out = response.getWriter();
 
         String name = getUsername(request);
-       // String date = getDate();
+        // String date = getDate();
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("templates/searchHotelReview.html");
 
         context.put("name", name);
-      //  context.put("date",date);
+        //  context.put("date",date);
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
 
         if (name != null) {
             out.println(writer.toString());
-        }
-        else {
+        } else {
             response.sendRedirect("/login");
         }
 
@@ -64,29 +67,24 @@ public class SearchHotelServlet extends BaseServlet {
         String keyword = request.getParameter("keyword");
         System.out.println("parameter keyword: " + keyword);
 
-        if (keyword == null && city == null) {
+        if (city == null) {
             response.sendRedirect("/searchHotel");
             return;
         }
-     //   String sql = "select * from hotels where city=" + city + and
-
-
+        if (keyword == null)
+            keyword = "";
+        ArrayList<Hotel> hotels = dbHandler.findHotels(city, keyword);
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("templates/recommendHotels.html");
 
-        city = StringEscapeUtils.escapeHtml4(city);
-        keyword = StringEscapeUtils.escapeHtml4(keyword);
-
         context.put("name", name);
-      //  context.put("hotels",hotels);
+        context.put("hotels", hotels);
 
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
         out.println(writer.toString());
-
-
 
     }
 

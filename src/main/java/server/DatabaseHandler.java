@@ -1,7 +1,10 @@
 package server;
 
+import hotelapp.Hotel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.JsonUtils;
+import org.w3c.dom.ls.LSOutput;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,6 +12,7 @@ import java.math.BigInteger;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -574,7 +578,6 @@ public class DatabaseHandler {
         try (
                 Connection connection = db.getConnection();
         ) {
-
             try (
                     PreparedStatement sql = connection.prepareStatement(Insert_reviews);
             ) {
@@ -599,4 +602,35 @@ public class DatabaseHandler {
         }
         return status;
     }
+
+    public ArrayList<Hotel> findHotels(String city, String keyword) {
+        ArrayList<Hotel> hotels = new ArrayList<>();
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "select hotelId, name, AVG(rating) as rating, link " +
+                                "from hotels natural join reviews " +
+                                "where city=? and name like ? group by hotelId;");
+        ) {
+            sql.setString(1, city);
+            sql.setString(2, "%" + keyword + "%");
+            ResultSet resultSet = sql.executeQuery();
+
+            while (resultSet.next()) {
+                hotels.add(new Hotel(
+                        resultSet.getString("hotelId"),
+                        resultSet.getString("name"),
+                        resultSet.getFloat("rating"),
+                        resultSet.getString("link")
+                ));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+        return hotels;
+    }
+
+
 }

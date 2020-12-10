@@ -66,7 +66,7 @@ public class BackEndServer {
         //                     MySQL "INSERT INTO" statements for Hotels and Reviews.
 
        BackEndServer backEndServer = new BackEndServer();
-       dbHandler.populateTables("input/hotels/hotels.json","input/reviews");
+     //  dbHandler.populateTables("input/hotels/hotels.json","input/reviews");
 
         try {
             backEndServer.start();

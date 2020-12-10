@@ -20,8 +20,10 @@ public class Hotel{
     private String pr;
     private String c;
     private Position ll;
+    private String link;
+    private float averageScore;
 
-    private String link = "https://www.expedia.com/";
+   // private String link = "https://www.expedia.com/";
     private List<Review> reviews;
     private HashSet<String> reviewIds;
 
@@ -34,23 +36,23 @@ public class Hotel{
         this.c = c;
         this.ll = ll;
     }
-    public String getLink(){
+    public Hotel(String hotelId,String name,float averageScore,String link){
+        id = hotelId;
+        f = name;
+        this.averageScore = averageScore;
+        this.link = link;
+    }
+
+    public String getLink() {
+        return this.link;
+    }
+
+    public String computeExpediaLink() {
         String city= ci.replaceAll(" ","-");
         return "https://www.expedia.com/" + city +"-Hotels.h" + id +".Hotel-Information";
     }
-    public int getAverageScore(){
-        int averageScore = 0;
-        int total = 0;
-        int count = 0;
-        if(reviews == null)
-            return 0;
-        for(Review review: reviews){
-            count++;
-
-            total += review.getRatingOverall();
-        }
-        averageScore = total / count;
-        return averageScore;
+    public float getAverageScore(){
+        return this.averageScore;
     }
 
     @Override
