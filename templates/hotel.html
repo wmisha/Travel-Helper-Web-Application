@@ -63,10 +63,10 @@
         #foreach($review in $reviews)
         <tr>
             <td>$review.getRatingOverall()</td>
-            <td>$review.getTitle()</a></td>
+            <td>$review.getTitle()</td>
             <td>$review.getReviewText()</td>
-            <td>$review.getUserNickname()</a></td>
-            <td>$review.getDate()</a></td>
+            <td>$review.getUserNickname()</td>
+            <td>$review.getDate()</td>
 
         </tr>
         #end
@@ -76,15 +76,7 @@
 
 
 </div>
-#foreach($review in $reviews)
-<!--<p>-->
-<!--    ReviewRating: $review.getRatingOverall()</br>-->
-<!--    ReviewTittle: $review.getTitle()</br>-->
-<!--    ReviewText: $review.getReviewText()</br>-->
-<!--    ReviewUser: $review.getUserNickname()</br>-->
-<!--    ReviewDate: $review.getDate()</br>-->
-<!--</p>-->
-#end
+
 
 <resource name="style1.css" type="download" location="style1.css">
 </resource>

@@ -20,6 +20,7 @@ public class Review  {
     private String reviewSubmissionTime;
     private String userNickname;
     private String hotelName;
+    private String hotelAddress;
     private String date;
 
     public Review(String hotelId, String reviewId, int ratingOverall,
