@@ -13,8 +13,8 @@
 
 <body>
 <div class="container pt-3 my-3 border justify-content-center">
-    <h3>$hotelName</h3>
-    <h5>$hotelAddress</h5>
+    <h3>$hotel.getF()</h3>
+    <h5>$hotel.getAd()</h5>
 </div>
 <div class="container pt-3 my-3 border">
     <form action="/hotelInfo?hotelId=$hotelId" method="post">
@@ -46,6 +46,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
+
 <div class="container pt-3 my-3 border">
     <h2>Reviews: </h2>
 
@@ -78,9 +79,8 @@
 </div>
 
 
-<resource name="style1.css" type="download" location="style1.css">
-</resource>
-<p style="font-size: 10pt; font-style: italic;">Last updated at $date.</p>
+
+<p style="font-size: 10pt; font-style: italic; center">Last updated at $date.</p>
 
 </body>
 </html>

@@ -26,6 +26,7 @@ public class Hotel{
    // private String link = "https://www.expedia.com/";
     private List<Review> reviews;
     private HashSet<String> reviewIds;
+    public Hotel(){}
 
     public Hotel(String id, String f, String ad, String ci, String pr, String c,Position ll) {
         this.id = id;
@@ -41,6 +42,14 @@ public class Hotel{
         f = name;
         this.averageScore = averageScore;
         this.link = link;
+    }
+
+    public void setF(String f) {
+        this.f = f;
+    }
+
+    public void setAd(String ad) {
+        this.ad = ad;
     }
 
     public String getLink() {

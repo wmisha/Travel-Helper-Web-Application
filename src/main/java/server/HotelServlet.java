@@ -1,5 +1,6 @@
 package server;
 
+import hotelapp.Hotel;
 import hotelapp.Review;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.velocity.Template;
@@ -14,11 +15,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HotelServlet extends BaseServlet {
 
-
+    protected static final DatabaseHandler dbHandler = DatabaseHandler.getInstance();
 
 
     /**
@@ -32,35 +34,32 @@ public class HotelServlet extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-
         PrintWriter out = response.getWriter();
 
         String date = getDate();
-        String hotelId = request.getParameter("hotelId");
-        System.out.println( "hotelId: ..........." +hotelId);
-
-
         String name = getUsername(request);
-
-
+        String hotelId = request.getParameter("hotelId");
+        System.out.println("hotelId: ..........." + hotelId);
+        
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("templates/hotel.html");
-       context.put("hotelId",hotelId);
-       context.put("date",date);
 
-
+        Hotel hotel = dbHandler.findOneHotelByHotelId(hotelId);
+        ArrayList<Review> reviews = dbhandler.findReviewsByHotelId(hotelId);
+        context.put("hotel", hotel);
+        context.put("reviews", reviews);
+        context.put("hotelId", hotelId);
+        context.put("date", date);
 
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
-        out.println(writer.toString());
 
-//        if (name != null) {
-//            out.println(writer.toString());
-//        }
-//        else {
-//            response.sendRedirect("/login");
-//        }
+        if (name != null) {
+            out.println(writer.toString());
+        } else {
+            response.sendRedirect("/login");
+        }
     }
 
     @Override
@@ -70,48 +69,29 @@ public class HotelServlet extends BaseServlet {
 
         PrintWriter out = response.getWriter();
 
+        String reviewId = dbHandler.getAlphaNumericString(11);
+        System.out.println("reviewId: " + reviewId);
         String hotelId = request.getParameter("hotelId");
         System.out.println("hotelId:!!!!!!!!!!! " + hotelId);
-        String rating = request.getParameter("rating");
+        int rating = Integer.parseInt(request.getParameter("rating"));
         String title = request.getParameter("title");
         String text = request.getParameter("text");
         String customer = getUsername(request);
         System.out.println("customer: " + customer);
         String ex = "2016-07-11T19:25:29Z";
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:SS"));
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         System.out.println("date: " + date);
+        int userId = dbHandler.findUerIdByUsername(customer);
+        System.out.println("userId: " + userId);
 
-        if (rating == null && title == null && text == null && customer==null) {
+        if (title == null && text == null && customer == null) {
             response.sendRedirect("/hotelInfo");
             return;
         }
-        rating = StringEscapeUtils.escapeHtml4(rating);
-        title = StringEscapeUtils.escapeHtml4(title);
-        text = StringEscapeUtils.escapeHtml4(text);
-        customer = StringEscapeUtils.escapeHtml4(customer);
 
-        out.println("<h2>Successfully add a review!</h2>");
-        out.println();
+        dbHandler.insertValuesToReviews(reviewId, hotelId, rating, title, text, customer, date, userId);
+
         response.sendRedirect("/hotelInfo?hotelId=" + hotelId);
-
-//        String name = getUsername(request);
-//        ArrayList<HotelDatabase.HotelMapEntry> hotels;
-//
-//        VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
-//        VelocityContext context = new VelocityContext();
-//        Template template = ve.getTemplate("templates/recommendHotels.html");
-
-
-      //  hotels = db.putSuggestionHotelsInJson(city,keyword);
-//
-//        context.put("name", name);
-//        context.put("hotels",hotels);
-//
-//        StringWriter writer = new StringWriter();
-//        template.merge(context, writer);
-//        out.println(writer.toString());
-
-
 
     }
 

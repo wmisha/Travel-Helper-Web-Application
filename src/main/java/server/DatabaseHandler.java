@@ -663,6 +663,109 @@ public class DatabaseHandler {
         return reviews;
 
     }
+    public Hotel findOneHotelByHotelId(String hotelId){
+        Hotel hotel = new Hotel();
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "select name, address " +
+                                "from hotels " +
+                                "where hotelId=?;");
+        ) {
+
+            sql.setString(1, hotelId);
+            ResultSet resultSet = sql.executeQuery();
+
+            while (resultSet.next()) {
+                hotel.setF(resultSet.getString("name"));
+                hotel.setAd(resultSet.getString("address"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+        return hotel;
+
+    }
+    public ArrayList<Review> findReviewsByHotelId(String hotelId){
+        ArrayList<Review> reviews = new ArrayList<>();
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "select rating,title, reviewText, customer, date " +
+                                "from reviews " +
+                                "where hotelId= ?;");
+        ) {
+
+            sql.setString(1, hotelId);
+            ResultSet resultSet = sql.executeQuery();
+
+            while (resultSet.next()) {
+                reviews.add(new Review(
+                        resultSet.getInt("rating"),
+                        resultSet.getString("title"),
+                        resultSet.getString("reviewText"),
+                        resultSet.getString("customer"),
+                        resultSet.getString("date")
+                ));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+        return reviews;
+
+    }
+    public int findUerIdByUsername(String name){
+        int userId = 0;
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "select userId " +
+                                "from users " +
+                                "where username= ?;");
+        ) {
+            sql.setString(1, name);
+            ResultSet resultSet = sql.executeQuery();
+
+            while (resultSet.next()) {
+               userId = resultSet.getInt("userId");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+        return userId;
+    }
+    public String getAlphaNumericString(int n)
+    {
+
+        // chose a Character random from this String
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                + "0123456789"
+                + "abcdefghijklmnopqrstuvxyz";
+
+        // create StringBuffer size of AlphaNumericString
+        StringBuilder sb = new StringBuilder(n);
+
+        for (int i = 0; i < n; i++) {
+
+            // generate a random number between
+            // 0 to AlphaNumericString variable length
+            int index
+                    = (int)(AlphaNumericString.length()
+                    * Math.random());
+
+            // add Character one by one in end of sb
+            sb.append(AlphaNumericString
+                    .charAt(index));
+        }
+
+        return sb.toString();
+    }
 
 
 }

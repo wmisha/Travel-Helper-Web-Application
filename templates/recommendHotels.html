@@ -34,7 +34,7 @@
         #foreach($hotel in $hotels)
         <tr>
             <td>$hotel.getId()</td>
-            <td><a href="http://localhost:8090/hotelInfo?hotelId=$hotel.Id()">$hotel.getF()</a></td>
+            <td><a href="http://localhost:8090/hotelInfo?hotelId=$hotel.getId()">$hotel.getF()</a></td>
             <td>$hotel.getAverageRating()</td>
             <td><a href="$hotel.getLink()">$hotel.getLink()</a></td>
 

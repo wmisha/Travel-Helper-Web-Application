@@ -53,6 +53,13 @@ public class Review  {
         this.userNickname = customer;
         this.date = date;
     }
+    public Review(int rating,String title,String reviewText,String customer,String date){
+        this.ratingOverall = rating;
+        this.title = title;
+        this.reviewText = reviewText;
+        this.userNickname = customer;
+        this.date = date;
+    }
 
     public String getHotelName(){
         return this.hotelName;
