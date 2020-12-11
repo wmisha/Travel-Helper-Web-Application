@@ -1,6 +1,5 @@
 package server;
 
-import hotelapp.Review;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -11,11 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 
-public class SearchReviewServlet extends BaseServlet {
-
-
+public class UserServlet extends BaseServlet {
     /**
      * This method corresponding with the request's Get method.
      *
@@ -24,33 +20,30 @@ public class SearchReviewServlet extends BaseServlet {
      * @throws ServletException
      * @throws IOException
      */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String name = getUsername(request);
-        if(name == null){
-            response.sendRedirect("/login");
-            return;
-        }
-
         PrintWriter out = response.getWriter();
-        String word = request.getParameter("keyword");
-        System.out.println("word: " + word);
+
+        String name = getUsername(request);
+        // String date = getDate();
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
-        Template template = ve.getTemplate("templates/recommendReviews.html");
+        Template template = ve.getTemplate("templates/user.html");
 
-        if (word == null) {
-            context.put("reviews", new ArrayList());
-            return;
-        }
-        ArrayList<Review> reviews = dbhandler.findReviews(word);
-        context.put("reviews", reviews);
+        context.put("name", name);
+        //  context.put("date",date);
 
+        context.put("savedHotels", dbhandler.findSavedHotels(getUserId(request)));
+        context.put("visitedLinks", dbhandler.findVisitedLinks(getUserId(request)));
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
-        out.println(writer.toString());
 
+        if (name != null) {
+            out.println(writer.toString());
+        } else {
+            response.sendRedirect("/login");
+        }
     }
 }

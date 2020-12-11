@@ -15,10 +15,8 @@ import java.util.ArrayList;
 
 public class DeleteServlet extends BaseServlet {
 
-    public  void doGet(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-
 
         String name = getUsername(request);
         if (name == null) {
@@ -31,9 +29,5 @@ public class DeleteServlet extends BaseServlet {
         dbhandler.deleteAReviewByReviewId(reviewId);
 
         response.sendRedirect("/checkUserReviews");
-
-
-
     }
 }
-

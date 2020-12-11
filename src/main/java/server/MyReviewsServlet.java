@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class CheckUserReviewsServlet extends BaseServlet {
+public class MyReviewsServlet extends BaseServlet {
 
     public  void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,7 +36,7 @@ public class CheckUserReviewsServlet extends BaseServlet {
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
-        Template template = ve.getTemplate("templates/userReviews.html");
+        Template template = ve.getTemplate("templates/myReviews.html");
 
 //        String hotelId = request.getParameter("hotelId");
 //        System.out.println("hotelId: ..........." + hotelId);
@@ -69,9 +69,7 @@ public class CheckUserReviewsServlet extends BaseServlet {
 
         dbhandler.updateReview(reviewId, rating, title, text, date);
 
-        response.sendRedirect("/checkUserReviews");
-
-
+        response.sendRedirect("/myReviews");
     }
 
 }

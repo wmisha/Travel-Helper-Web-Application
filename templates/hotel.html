@@ -10,21 +10,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
-
 <body>
-<nav class="navbar navbar-expand-sm bg-light justify-content-center">
-
-    <ul class="navbar-nav">
-
-        <li class="nav-item">
-            <a class="nav-link" href="/login?logout">Logout</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="http://localhost:8090/searchHotel">Users</a>
-        </li>
-    </ul>
-</nav>
-
+#include("templates/header.html")
 
 <div class="container pt-3 my-3 border justify-content-center">
     <h3>$hotel.getF()</h3>
@@ -67,6 +54,7 @@
             <th>text</th>
             <th>customer</th>
             <th>date</th>
+            <th>like</th>
         </tr>
         </thead>
         <tbody>
@@ -74,10 +62,14 @@
         <tr>
             <td>$review.getRatingOverall()</td>
             <td>$review.getTitle()</td>
-            <td>$review.getReviewText()</td>
+            <td>$review.getReviewText()
+#if ($review.getLikes() > 0)
+                <br /><br /><small><i>$review.getLikes() users found this review helpful.</i></small>
+#end
+            </td>
             <td>$review.getUserNickname()</td>
             <td>$review.getDate()</td>
-
+            <td><a href="http://localhost:8090/deleteAReview?reviewId=$review.getReviewId()" class="btn btn-danger" role="button">Like</a></td>
         </tr>
         #end
         </tbody>

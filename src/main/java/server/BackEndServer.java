@@ -7,8 +7,6 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import java.nio.file.Path;
-
 
 public class BackEndServer {
     public static final int PORT = 8090;
@@ -22,12 +20,14 @@ public class BackEndServer {
         context1.addServlet(UserRegisterServlet.class, "/register");
         context1.addServlet(UserLoginServlet.class, "/login");
         context1.addServlet(WelcomeServlet.class, "/welcome");
-        context1.addServlet(new ServletHolder(new SearchHotelServlet()), "/searchHotel");
-        context1.addServlet(new ServletHolder(new HotelServlet()), "/hotelInfo");
-        context1.addServlet(new ServletHolder(new SearchReviewServlet()), "/searchReview");
-        context1.addServlet(new ServletHolder(new CheckUserReviewsServlet()), "/checkUserReviews");
-        context1.addServlet(new ServletHolder(new DeleteServlet()), "/deleteAReview");
+        context1.addServlet(new ServletHolder(new UserServlet()), "/user");
+        context1.addServlet(new ServletHolder(new MyReviewsServlet()), "/myReviews");
+        context1.addServlet(new ServletHolder(new UserActions()), "/action");
 
+        context1.addServlet(new ServletHolder(new HotelServlet()), "/hotelInfo");
+        context1.addServlet(new ServletHolder(new SearchHotelServlet()), "/searchHotel");
+        context1.addServlet(new ServletHolder(new SearchReviewServlet()), "/searchReview");
+        context1.addServlet(new ServletHolder(new DeleteServlet()), "/deleteAReview");
 
         // initialize Velocity
         VelocityEngine velocity = new VelocityEngine();

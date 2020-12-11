@@ -166,10 +166,14 @@ public class BaseServlet extends HttpServlet {
 		String user  = cookies.get("name");
 
 		if ((login != null) && login.equals("true") && (user != null)) {
-			// this is not safe!
 			return user;
 		}
-
 		return null;
+	}
+
+	protected int getUserId(HttpServletRequest request) {
+		Map<String, String> cookies = getCookieMap(request);
+		String idString = cookies.get("id");
+		return idString == null ? -1 : Integer.parseInt(idString);
 	}
 }

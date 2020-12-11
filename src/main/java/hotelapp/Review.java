@@ -23,28 +23,29 @@ public class Review  {
     private String hotelAddress;
     private String date;
     private int userId;
+    private int likes;
 
-    public Review(String hotelId, String reviewId, int ratingOverall,
-                  String title, String reviewText, String reviewSubmissionTime,String userNickname) {
-        this.hotelId = hotelId;
-        this.reviewId = reviewId;
-        this.ratingOverall = ratingOverall;
-        this.title = title;
-        this.reviewText = reviewText;
-        this.reviewSubmissionTime = reviewSubmissionTime.substring(0,10);
-        this.userNickname = userNickname;
+//    public Review(String hotelId, String reviewId, int ratingOverall,
+//                  String title, String reviewText, String reviewSubmissionTime,String userNickname) {
+//        this.hotelId = hotelId;
+//        this.reviewId = reviewId;
+//        this.ratingOverall = ratingOverall;
+//        this.title = title;
+//        this.reviewText = reviewText;
+//        this.reviewSubmissionTime = reviewSubmissionTime.substring(0,10);
+//        this.userNickname = userNickname;
+//
+//    }
 
-    }
 
-
-    public Review(String hotelId, int ratingOverall, String title, String reviewText,String userNickname, String reviewSubmissionTime) {
-        this.hotelId = hotelId;
-        this.ratingOverall = ratingOverall;
-        this.title = title;
-        this.reviewText = reviewText;
-        this.userNickname = userNickname;
-        this.reviewSubmissionTime = reviewSubmissionTime;
-    }
+//    public Review(String hotelId, int ratingOverall, String title, String reviewText,String userNickname, String reviewSubmissionTime) {
+//        this.hotelId = hotelId;
+//        this.ratingOverall = ratingOverall;
+//        this.title = title;
+//        this.reviewText = reviewText;
+//        this.userNickname = userNickname;
+//        this.reviewSubmissionTime = reviewSubmissionTime;
+//    }
 
     public Review(String hotelId,String hotelName,String title,String reviewText,String customer,String date){
         this.hotelId = hotelId;
@@ -54,12 +55,14 @@ public class Review  {
         this.userNickname = customer;
         this.date = date;
     }
-    public Review(int rating,String title,String reviewText,String customer,String date){
+    public Review(String reviewId, int rating,String title,String reviewText,String customer, int likes,String date){
+        this.reviewId = reviewId;
         this.ratingOverall = rating;
         this.title = title;
         this.reviewText = reviewText;
         this.userNickname = customer;
         this.date = date;
+        this.likes = likes;
     }
     public Review(String reviewId,int rating,String title,String reviewText,String customer,String date,int userId){
         this.reviewId = reviewId;
@@ -131,7 +134,11 @@ public class Review  {
         return userNickname;
     }
     public String getDate(){
-      return this.date;
+        return this.date;
+    }
+
+    public int getLikes(){
+        return this.likes;
     }
 
 

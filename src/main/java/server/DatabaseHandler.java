@@ -110,7 +110,7 @@ public class DatabaseHandler {
      * Used to authenticate a user.
      */
     private static final String AUTH_SQL =
-            "SELECT username FROM users " +
+            "SELECT userId, username FROM users " +
                     "WHERE username = ? AND password = ?";
 
     /**
@@ -451,19 +451,18 @@ public class DatabaseHandler {
 
     /**
      * Checks if the provided username and password match what is stored
-     * in the database. Requires an active database connection.
+     * in the database. Must retrieve the salt and hash the password to
+     * do the comparison.
      *
      * @param username - username to authenticate
      * @param password - password to authenticate
      * @return status.ok if authentication successful
-     * @throws SQLException
      */
-    private Status authenticateUser(Connection connection, String username,
-                                    String password) throws SQLException {
-
-        Status status = Status.ERROR;
-
+    public int authenticateUser(String username, String password) {
+        log.debug("Authenticating user " + username + ".");
+        int userId = -1;
         try (
+                Connection connection = db.getConnection();
                 PreparedStatement statement = connection.prepareStatement(AUTH_SQL);
         ) {
             String usersalt = getSalt(connection, username);
@@ -473,39 +472,15 @@ public class DatabaseHandler {
             statement.setString(2, passhash);
 
             ResultSet results = statement.executeQuery();
-            status = results.next() ? status = Status.OK : Status.INVALID_LOGIN;
-        } catch (SQLException e) {
-            log.debug(e.getMessage(), e);
-            status = Status.SQL_EXCEPTION;
-        }
+            if (results.next())
+                userId = results.getInt("userId");
 
-        return status;
-    }
-
-    /**
-     * Checks if the provided username and password match what is stored
-     * in the database. Must retrieve the salt and hash the password to
-     * do the comparison.
-     *
-     * @param username - username to authenticate
-     * @param password - password to authenticate
-     * @return status.ok if authentication successful
-     */
-    public Status authenticateUser(String username, String password) {
-        Status status = Status.ERROR;
-
-        log.debug("Authenticating user " + username + ".");
-
-        try (
-                Connection connection = db.getConnection();
-        ) {
-            status = authenticateUser(connection, username, password);
         } catch (SQLException ex) {
-            status = Status.CONNECTION_FAILED;
-            log.debug(status, ex);
+            System.out.println(ex);
+            ex.printStackTrace();
         }
 
-        return status;
+        return userId;
     }
 
     /**
@@ -528,36 +503,6 @@ public class DatabaseHandler {
             status = (count == 1) ? Status.OK : Status.INVALID_USERNAME;
         } catch (SQLException ex) {
             status = Status.SQL_EXCEPTION;
-            log.debug(status, ex);
-        }
-
-        return status;
-    }
-
-    /**
-     * Removes a user from the database if the username and password are
-     * provided correctly.
-     *
-     * @param username - username to remove
-     * @param password - password of user
-     * @return server.Status.OK if removal successful
-     */
-    public Status removeUser(String username, String password) {
-
-        Status status = Status.ERROR;
-
-        log.debug("Removing user " + username + ".");
-
-        try (
-                Connection connection = db.getConnection();
-        ) {
-            status = authenticateUser(connection, username, password);
-
-            if (status == Status.OK) {
-                status = removeUser(connection, username, password);
-            }
-        } catch (Exception ex) {
-            status = Status.CONNECTION_FAILED;
             log.debug(status, ex);
         }
 
@@ -722,9 +667,9 @@ public class DatabaseHandler {
         try (
                 Connection connection = db.getConnection();
                 PreparedStatement sql = connection.prepareStatement(
-                        "select rating,title, reviewText, customer, date " +
-                                "from reviews " +
-                                "where hotelId= ?;");
+                        "select reviewId, rating, title, reviewText, customer, date, count(liked_reviews.userId) as likes " +
+                                "from reviews left join liked_reviews using (reviewId) " +
+                                "where hotelId= ? group by reviewId;");
         ) {
 
             sql.setString(1, hotelId);
@@ -732,10 +677,12 @@ public class DatabaseHandler {
 
             while (resultSet.next()) {
                 reviews.add(new Review(
+                        resultSet.getString("reviewId"),
                         resultSet.getInt("rating"),
                         resultSet.getString("title"),
                         resultSet.getString("reviewText"),
                         resultSet.getString("customer"),
+                        resultSet.getInt("likes"),
                         resultSet.getString("date")
                 ));
             }
@@ -850,10 +797,6 @@ public class DatabaseHandler {
         }
     }
 
-    public void updateAReviewByUsername(String name) {
-
-    }
-
     public Status updateReview(String reviewId, int rating, String title, String text, String date) {
         Status status = Status.ERROR;
         log.debug("Updating " + reviewId + ".");
@@ -876,5 +819,107 @@ public class DatabaseHandler {
             log.debug(Status.SQL_EXCEPTION, ex);
         }
         return status;
+    }
+
+    public void saveHotel(int userId, String hotelId) {
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "insert into saved_hotels (userId, hotelId) VALUES (?,?);"
+                );
+        ) {
+            sql.setInt(1, userId);
+            sql.setString(2, hotelId);
+            sql.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+    }
+
+    public void likeReview(int userId, String reviewId) {
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "insert into liked_reviews (userId, reviewId) VALUES (?,?);"
+                );
+        ) {
+            sql.setInt(1, userId);
+            sql.setString(2, reviewId);
+            sql.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+    }
+
+    public void visitLink(int userId, String link) {
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "insert into visited_links (userId, link) VALUES (?,?);"
+                );
+        ) {
+            sql.setInt(1, userId);
+            sql.setString(2, link);
+            sql.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+    }
+
+    public ArrayList<Hotel> findSavedHotels(int userId) {
+        ArrayList<Hotel> hotels = new ArrayList<>();
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "select hotelId, name, AVG(rating) as rating, link " +
+                                "from hotels left join reviews using (hotelId) " +
+                                "join saved_hotels using (hotelId) " +
+                                "where saved_hotels.userId=? group by hotelId;");
+        ) {
+            sql.setInt(1, userId);
+            ResultSet resultSet = sql.executeQuery();
+
+            while (resultSet.next()) {
+                hotels.add(new Hotel(
+                        resultSet.getString("hotelId"),
+                        resultSet.getString("name"),
+                        resultSet.getFloat("rating"),
+                        resultSet.getString("link")
+                ));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+        return hotels;
+    }
+
+    public ArrayList<String> findVisitedLinks(int userId) {
+        ArrayList<String> links = new ArrayList<>();
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "select link from visited_links where userId=?;"
+                );
+        ) {
+            sql.setInt(1, userId);
+            ResultSet resultSet = sql.executeQuery();
+
+            while (resultSet.next()) {
+                links.add(resultSet.getString("link"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+        return links;
     }
 }

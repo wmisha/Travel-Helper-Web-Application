@@ -59,19 +59,21 @@ public class UserLoginServlet extends BaseServlet {
         String user = request.getParameter("user");
         String pass = request.getParameter("pass");
 
-        Status status = dbhandler.authenticateUser(user, pass);
+        int userId = dbhandler.authenticateUser(user, pass);
 
         try {
-            if (status == Status.OK) {
+            if (userId >= 0) {
                 // should eventually change this to something more secure
                 response.addCookie(new Cookie("login", "true"));
                 response.addCookie(new Cookie("name", user));
-                response.sendRedirect(response.encodeRedirectURL("/searchHotel"));
+                response.addCookie(new Cookie("id", userId + ""));
+                response.sendRedirect(response.encodeRedirectURL("/user"));
             }
             else {
                 response.addCookie(new Cookie("login", "false"));
                 response.addCookie(new Cookie("name", ""));
-                response.sendRedirect(response.encodeRedirectURL("/login?error=" + status.ordinal()));
+                response.addCookie(new Cookie("id", "-1"));
+                response.sendRedirect(response.encodeRedirectURL("/login?error=" + Status.INVALID_LOGIN.ordinal()));
             }
         }
         catch (Exception ex) {

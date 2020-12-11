@@ -5,26 +5,14 @@
 <head>
     <title>HotelSearch</title>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<nav class="navbar navbar-expand-sm bg-light justify-content-center">
-
-    <ul class="navbar-nav">
-
-        <li class="nav-item">
-            <a class="nav-link" href="http://localhost:8090/">Home</a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="/login?logout" role="button">Logout</a>
-        </li>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="http://localhost:8090/searchHotel">Users</a>
-        </li>
-    </ul>
-</nav>
+#include("templates/header.html")
 
 #if($name != "anonymous")
 <h3>Hello, $name! </h3>
@@ -33,41 +21,74 @@
 <p>Please enter city name and keyword to search hotels:</p>
 
 <form action="/searchHotel" method="post">
-    <table border="1">
+    <table>
         <tr>
             <td>City:</td>
             <td><input type="text" size="30" name="city" ></td>
         </tr>
         <tr>
-            <td>keyword:</td>
+            <td>Keyword:</td>
             <td><input type="text" size="30" name="keyword" ></td>
         </tr>
     </table>
-    <p><input type="submit" value="Enter"></p>
+    <p><input type="submit" class="btn btn-info" value="Enter"></p>
 </form>
 </div>
 
 <div class="container pt-3 my-3 border justify-content-center">
 <p>Please enter keyword to search reviews:</p>
 
-<form action="/searchReview" method="get">
-    <table border="1">
+<form action="/searchReview" method="post">
+    <table>
         <tr>
-            <td>keyword:</td>
+            <td>Keyword:</td>
             <td><input type="text" size="30" name="keyword" ></td>
         </tr>
     </table>
-    <p><input type="submit" value="Enter"></p>
+    <p><input type="submit" class="btn btn-info" value="Enter"></p>
 </form>
 </div>
 
 <div class="container pt-3 my-3 border justify-content-center">
-    <p>Check your own reviews:</p>
-
-    <form action="/checkUserReviews?username=$name" method="get">
-
-        <p><input type="submit" value="Go Check"></p>
+    <h2>My reviews:</h2>
+    <form action="/myReviews" method="get">
+        <p><input type="submit" class="btn btn-info" value="Show my reviews"></p>
     </form>
+</div>
+
+<div class="container pt-3 my-3 border justify-content-center">
+    <h2>My saved hotels:</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Hotel ID</th>
+            <th>Hotel Name</th>
+            <th>Rating</th>
+            <th>Link</th>
+        </tr>
+        </thead>
+        <tbody>
+        #foreach($hotel in $savedHotels)
+        <tr>
+            <td>$hotel.getId()</td>
+            <td><a href="http://localhost:8090/hotelInfo?hotelId=$hotel.getId()">$hotel.getF()</a></td>
+            <td>$hotel.getAverageRating()</td>
+            <td><a href="/action?visitLink=$hotel.getURLEncodedLink()">$hotel.getLink()</a></td>
+        </tr>
+        #end
+        </tbody>
+    </table>
+</div>
+
+<div class="container pt-3 my-3 border justify-content-center">
+    <h2>My visited links:</h2>
+    <table class="table table-bordered">
+        <tbody>
+#foreach($link in $visitedLinks)
+        <tr><td><a href="$link">$link</a></td></tr>
+#end
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

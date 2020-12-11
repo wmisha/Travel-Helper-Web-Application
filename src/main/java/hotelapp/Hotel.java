@@ -2,6 +2,8 @@ package hotelapp;
 
 import com.google.gson.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
@@ -54,20 +56,22 @@ public class Hotel{
         this.ad = ad;
     }
 
+    public String getURLEscapedLink() {
+        return URLEncoder.encode(this.link, StandardCharsets.UTF_8);
+    }
+
     public String getLink() {
         return this.link;
     }
 
     public String computeExpediaLink() {
         String city= ci.replaceAll(" ","-");
-        return "https://www.expedia.com/" + city +"-Hotels.h" + id +".Hotel-Information";
+        return "https://www.expedia.com/" + city + "-Hotels.h" + id +".Hotel-Information";
     }
     public String getAverageRating(){
-
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(1);
         return df.format(this.averageScore);
-
     }
 
     @Override
