@@ -58,6 +58,7 @@ public class CheckUserReviewsServlet extends BaseServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        System.out.println(1);
 
         String reviewId = request.getParameter("reviewId");
         System.out.println("In Edit page: " + reviewId);

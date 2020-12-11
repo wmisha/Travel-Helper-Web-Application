@@ -834,7 +834,7 @@ public class DatabaseHandler {
         try (
                 Connection connection = db.getConnection();
                 PreparedStatement sql = connection.prepareStatement(
-                        "UPDATE reviews SET rating=?, title=?, text=?, date=? WHERE reviewId=?;"
+                        "UPDATE reviews SET rating=?, title=?, reviewText=?, date=? WHERE reviewId=?;"
                 );
         ) {
             sql.setInt(1, rating);
