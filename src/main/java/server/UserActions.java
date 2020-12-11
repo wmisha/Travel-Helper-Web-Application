@@ -26,7 +26,7 @@ public class UserActions extends BaseServlet {
         }
 
         String likedReviewId = request.getParameter("likeReview");
-        if (savedHotelId != null) {
+        if (likedReviewId != null) {
             dbhandler.likeReview(
                     getUserId(request),
                     likedReviewId

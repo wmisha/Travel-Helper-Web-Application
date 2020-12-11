@@ -79,7 +79,7 @@
             <td>$review.getUserNickname()</td>
             <td>$review.getDate()</td>
             <td><button class="btn btn-primary" onclick="populateEditForm('$review.getReviewId()',$review.getRatingOverall(),'$review.getTitle()','$review.getReviewText()');">Edit</button></td>
-            <th><a href="http://localhost:8090/deleteAReview?reviewId=$review.getReviewId()" class="btn btn-danger" role="button">Delete</a></th>
+            <th><a href="/deleteAReview?reviewId=$review.getReviewId()" class="btn btn-danger" role="button">Delete</a></th>
         </tr>
         #end
         </tbody>

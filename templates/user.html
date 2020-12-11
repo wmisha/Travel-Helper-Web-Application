@@ -14,9 +14,12 @@
 <body>
 #include("templates/header.html")
 
-#if($name != "anonymous")
+#if($name != "")
+
+<div class="container pt-3 my-3 border justify-content-center">
 <h3>Hello, $name! </h3>
-#end
+</div>
+
 <div class="container pt-3 my-3 border justify-content-center">
 <p>Please enter city name and keyword to search hotels:</p>
 
@@ -73,12 +76,12 @@
             <td>$hotel.getId()</td>
             <td><a href="http://localhost:8090/hotelInfo?hotelId=$hotel.getId()">$hotel.getF()</a></td>
             <td>$hotel.getAverageRating()</td>
-            <td><a href="/action?visitLink=$hotel.getURLEncodedLink()">$hotel.getLink()</a></td>
+            <td><a href="/action?visitLink=$hotel.getURLEscapedLink()">$hotel.getLink()</a></td>
         </tr>
         #end
         </tbody>
     </table>
-    <a class="btn btn-info" href="/action?clearSavedHotels">Clear saved hotels</a>
+    <a class="btn btn-info" href="/action?clearSavedHotels">Clear saved hotels</a><br />
 </div>
 
 <div class="container pt-3 my-3 border justify-content-center">
@@ -90,8 +93,10 @@
 #end
         </tbody>
     </table>
-    <a class="btn btn-info" href="/action?clearVisitedLinks">Clear visited links</a>
+    <a class="btn btn-info" href="/action?clearVisitedLinks">Clear visited links</a><br />
 </div>
+
+#end
 </body>
 </html>
 

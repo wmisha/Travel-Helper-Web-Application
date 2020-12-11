@@ -13,11 +13,39 @@
 <body>
 #include("templates/header.html")
 
+<script>
+function saveHotelAjax(hotelId, button) {
+    fetch('/action?saveHotel=' + hotelId, {method:'get'}).
+    then(res => {
+        var el = document.createElement("span");
+        el.innerHTML = "Saved!";
+        el.style = "color: green";
+        button.parentNode.insertBefore(el, button.nextSibling);
+    }).
+    catch(err => {
+      console.log(err);
+    });
+}
+function likeReviewAjax(reviewId, button) {
+    fetch('/action?likeReview=' + reviewId, {method:'get'}).
+    then(res => {
+        var el = document.createElement("span");
+        el.innerHTML = "Liked!";
+        el.style = "color: green";
+        button.parentNode.insertBefore(el, button.nextSibling);
+    }).
+    catch(err => {
+      console.log(err);
+    });
+}
+</script>
+
 <div class="container pt-3 my-3 border justify-content-center">
-    <h3>$hotel.getF()</h3>
+    <h3>$hotel.getF() <button onclick="saveHotelAjax($hotelId, this);" class="btn btn-danger" role="button">Save</button></h3>
     <h5>$hotel.getAd()</h5>
 </div>
 <div class="container pt-3 my-3 border">
+    <h2>Add Review: </h2>
     <form action="/hotelInfo?hotelId=$hotelId" method="post">
         <div class="form-group">
             <label for="rating">Rating (select one):</label>
@@ -69,7 +97,7 @@
             </td>
             <td>$review.getUserNickname()</td>
             <td>$review.getDate()</td>
-            <td><a href="http://localhost:8090/deleteAReview?reviewId=$review.getReviewId()" class="btn btn-danger" role="button">Like</a></td>
+            <td><button onclick="likeReviewAjax('$review.getReviewId()', this);" class="btn btn-danger" role="button">Like</button></td>
         </tr>
         #end
         </tbody>
