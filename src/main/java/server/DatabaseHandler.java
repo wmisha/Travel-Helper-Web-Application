@@ -39,7 +39,8 @@ public class DatabaseHandler {
                     "userId INTEGER AUTO_INCREMENT PRIMARY KEY, " +
                     "username VARCHAR(32) NOT NULL UNIQUE, " +
                     "password CHAR(64) NOT NULL, " +
-                    "userSalt CHAR(32) NOT NULL);";
+                    "userSalt CHAR(32) NOT NULL," +
+                    "lastLogin DATE);";
 
     private static final String CREATE_hotels =
             "CREATE TABLE IF NOT EXISTS hotels (" +
@@ -50,7 +51,6 @@ public class DatabaseHandler {
                     "lat VARCHAR(255)," +
                     "lng VARCHAR(255)," +
                     "link VARCHAR(255));";
-
 
     private static final String CREATE_reviews =
             "CREATE TABLE IF NOT EXISTS reviews (" +
@@ -63,6 +63,23 @@ public class DatabaseHandler {
                     "date        DATE ," +
                     "userId INTEGER);";
 
+    private static final String CREATE_saved_hotels =
+            "CREATE TABLE IF NOT EXISTS saved_hotels (" +
+                    "userId INTEGER," +
+                    "hotelId VARCHAR(255)," +
+                    "UNIQUE (userId, hotelId));";
+
+    private static final String CREATE_liked_reviews =
+            "CREATE TABLE IF NOT EXISTS liked_reviews (" +
+                    "userId INTEGER," +
+                    "reviewId VARCHAR(255)," +
+                    "UNIQUE (userId, reviewId));";
+
+    private static final String CREATE_visited_links =
+            "CREATE TABLE IF NOT EXISTS visited_links (" +
+                    "userId INTEGER," +
+                    "link VARCHAR(255)," +
+                    "UNIQUE (userId, link));";
 
     /**
      * Used to insert a new user into the database.
@@ -175,16 +192,25 @@ public class DatabaseHandler {
             //  statement.executeUpdate("DROP TABLE IF EXISTS users;");
             //  statement.executeUpdate("DROP TABLE IF EXISTS hotels;");
             //  statement.executeUpdate("DROP TABLE IF EXISTS reviews;");
+            //  statement.executeUpdate("DROP TABLE IF EXISTS saved_hotels;");
+            //  statement.executeUpdate("DROP TABLE IF EXISTS liked_reviews;");
+            //  statement.executeUpdate("DROP TABLE IF EXISTS visited_links;");
 
             // In case table missing, must create
             statement.executeUpdate(CREATE_users);
             statement.executeUpdate(CREATE_hotels);
             statement.executeUpdate(CREATE_reviews);
+            statement.executeUpdate(CREATE_saved_hotels);
+            statement.executeUpdate(CREATE_liked_reviews);
+            statement.executeUpdate(CREATE_visited_links);
 
             // Check if create was successful
             if (!(statement.executeQuery("SHOW TABLES LIKE 'users';").next()
                     && statement.executeQuery("SHOW TABLES LIKE 'hotels';").next()
                     && statement.executeQuery("SHOW TABLES LIKE 'reviews';").next()
+                    && statement.executeQuery("SHOW TABLES LIKE 'saved_hotels';").next()
+                    && statement.executeQuery("SHOW TABLES LIKE 'liked_reviews';").next()
+                    && statement.executeQuery("SHOW TABLES LIKE 'visited_links';").next()
             )) {
                 status = Status.CREATE_FAILED;
             } else {
@@ -349,8 +375,8 @@ public class DatabaseHandler {
         log.debug("Registering " + newuser + ".");
 
         // make sure we have non-null and non-emtpy values for login
-        if (isBlank(newuser) || isBlank(newpass)) {
-            status = Status.INVALID_LOGIN;
+        if (isBlank(newuser)) {
+            status = Status.INVALID_USERNAME;
             log.debug(status);
             return status;
         }
@@ -358,9 +384,9 @@ public class DatabaseHandler {
         System.out.println("password: " + newpass);
         if (!validatePassword(newpass)) {
             System.out.println("the password is invalid!");
+            status = Status.INVALID_PASSWORD;
             return status;
         }
-
 
         // try to connect to database and test for duplicate user
         System.out.println(db);
@@ -391,9 +417,7 @@ public class DatabaseHandler {
      * @return
      */
     private boolean validatePassword(String password) {
-
-        return password.matches("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=])(?=\\S+$).{3,10}$");
-
+        return password.matches("^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{5,10}$");
     }
 
     /**
@@ -501,7 +525,7 @@ public class DatabaseHandler {
             statement.setString(1, username);
 
             int count = statement.executeUpdate();
-            status = (count == 1) ? Status.OK : Status.INVALID_USER;
+            status = (count == 1) ? Status.OK : Status.INVALID_USERNAME;
         } catch (SQLException ex) {
             status = Status.SQL_EXCEPTION;
             log.debug(status, ex);
@@ -555,6 +579,7 @@ public class DatabaseHandler {
             sql.setString(6, lng);
             sql.setString(7, link);
             sql.executeUpdate();
+            connection.close();
 
         } catch (SQLException throwable) {
             throwable.printStackTrace();
@@ -591,6 +616,7 @@ public class DatabaseHandler {
                 sql.setString(7, date);
                 sql.setInt(8, userId);
                 sql.executeUpdate();
+                connection.close();
 
                 status = Status.OK;
             } catch (SQLException ex) {

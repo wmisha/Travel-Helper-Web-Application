@@ -7,15 +7,13 @@
     <meta charset="utf-8">
     <script>
         function validatePassword(password) {
-        document.getElementById('validation').innerHTML = 'Hi, I\'m going to validate your password! You typed: ' + password;
-
-            var pattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=])(?=\\S+$).{3,10}$/;
-            if(pattern.test(password)){
-                document.getElementById('validation').innerHTML = 'Valid Password !';
-                //return true;
-            }else{
-                document.getElementById('validation').innerHTML = ('Invalid password: at least one letter, one number, one special character.');
-                //return false;
+            var pattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&+=])(?=\S+$).{5,10}$/;
+            if (pattern.test(password)){
+                document.getElementById('validation').innerHTML = 'Valid Password';
+                return true;
+            } else {
+                document.getElementById('validation').innerHTML = 'Invalid password: must be 5-10 chars, at least one letter, one number, one special character.';
+                return false;
             }
         }
 </script>
@@ -33,11 +31,11 @@
     </ul>
 </nav>
 #if($errorMessage != "")
-<p style="color: red;">$errorMessage</p>
+<p style="color: orange;">$errorMessage</p>
 #end
 
 <p style="color: blue;" id="validation"></p>
-<form action="/register" method="post">
+<form action="/register" method="post" onsubmit="return validatePassword(document.getElementById('pass').value);">
     <table border="0">
         <tr>
             <td>Username:</td>
@@ -45,7 +43,7 @@
         </tr>
         <tr>
             <td>Password:</td>
-            <td><input type="password" size="30" onkeyup="validatePassword(this.value);" name="pass" ></td>
+            <td><input type="password" size="30" onkeyup="validatePassword(this.value);" id="pass" name="pass" ></td>
         </tr>
     </table>
     <p><input type="submit" value="Register"></p>

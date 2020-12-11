@@ -24,8 +24,12 @@ public enum Status {
 	CONNECTION_FAILED("Failed to establish a database connection."),
 	CREATE_FAILED("Failed to create necessary tables."),
 	INVALID_LOGIN("Invalid username and/or password."),
-	INVALID_USER("User does not exist."),
+
+	// Registration errors:
 	DUPLICATE_USER("User with that username already exists."),
+	INVALID_USERNAME("Username cannot be blank."),
+	INVALID_PASSWORD("Password must be between 5 to 10 characters, with at least one number, one letter, and one special character."),
+
 	SQL_EXCEPTION("Unable to execute SQL statement.");
 
 	private final String message;
