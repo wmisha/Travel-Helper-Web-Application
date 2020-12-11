@@ -191,7 +191,7 @@ public class DatabaseHandler {
                 Statement statement = connection.createStatement();
         ) {
             // Drop all tables and start fresh
-            statement.executeUpdate("DROP TABLE IF EXISTS users;");
+            //  statement.executeUpdate("DROP TABLE IF EXISTS users;");
             //  statement.executeUpdate("DROP TABLE IF EXISTS hotels;");
             //  statement.executeUpdate("DROP TABLE IF EXISTS reviews;");
             //  statement.executeUpdate("DROP TABLE IF EXISTS saved_hotels;");
