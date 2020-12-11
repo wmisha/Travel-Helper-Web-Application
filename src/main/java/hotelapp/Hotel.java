@@ -2,6 +2,7 @@ package hotelapp;
 
 import com.google.gson.*;
 
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -44,6 +45,7 @@ public class Hotel{
         this.link = link;
     }
 
+
     public void setF(String f) {
         this.f = f;
     }
@@ -60,8 +62,12 @@ public class Hotel{
         String city= ci.replaceAll(" ","-");
         return "https://www.expedia.com/" + city +"-Hotels.h" + id +".Hotel-Information";
     }
-    public float getAverageScore(){
-        return this.averageScore;
+    public String getAverageRating(){
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(1);
+        return df.format(this.averageScore);
+
     }
 
     @Override
