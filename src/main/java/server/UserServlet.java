@@ -26,6 +26,7 @@ public class UserServlet extends BaseServlet {
         PrintWriter out = response.getWriter();
 
         String name = getUsername(request);
+        String prevLogin = getPrevLogin(request);
         // String date = getDate();
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
@@ -33,6 +34,7 @@ public class UserServlet extends BaseServlet {
         Template template = ve.getTemplate("templates/user.html");
 
         context.put("name", name);
+        context.put("prevLogin", prevLogin);
         //  context.put("date",date);
 
         context.put("savedHotels", dbhandler.findSavedHotels(getUserId(request)));

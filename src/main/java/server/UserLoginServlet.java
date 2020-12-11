@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class UserLoginServlet extends BaseServlet {
     @Override
@@ -63,6 +65,10 @@ public class UserLoginServlet extends BaseServlet {
 
         try {
             if (userId >= 0) {
+                String prevLogin = dbhandler.updateLoginTime(userId);
+                response.addCookie(new Cookie("prevLogin",
+                        prevLogin.substring(0, 10) + "," + prevLogin.substring(11)));
+
                 // should eventually change this to something more secure
                 response.addCookie(new Cookie("login", "true"));
                 response.addCookie(new Cookie("name", user));

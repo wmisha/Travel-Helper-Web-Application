@@ -13,6 +13,8 @@ import java.math.BigInteger;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -40,7 +42,7 @@ public class DatabaseHandler {
                     "username VARCHAR(32) NOT NULL UNIQUE, " +
                     "password CHAR(64) NOT NULL, " +
                     "userSalt CHAR(32) NOT NULL," +
-                    "lastLogin DATE);";
+                    "lastLogin DATETIME);";
 
     private static final String CREATE_hotels =
             "CREATE TABLE IF NOT EXISTS hotels (" +
@@ -85,8 +87,8 @@ public class DatabaseHandler {
      * Used to insert a new user into the database.
      */
     private static final String REGISTER_SQL =
-            "INSERT INTO users (username, password, userSalt) " +
-                    "VALUES (?, ?, ?);";
+            "INSERT INTO users (username, password, userSalt, lastLogin) " +
+                    "VALUES (?, ?, ?, ?);";
     private static final String Insert_hotels =
             "Insert ignore into hotels (hotelId,name,address,city,lat,lng,link)" +
                     "VALUES(?,?,?,?,?,?,?);";
@@ -189,7 +191,7 @@ public class DatabaseHandler {
                 Statement statement = connection.createStatement();
         ) {
             // Drop all tables and start fresh
-            //  statement.executeUpdate("DROP TABLE IF EXISTS users;");
+            statement.executeUpdate("DROP TABLE IF EXISTS users;");
             //  statement.executeUpdate("DROP TABLE IF EXISTS hotels;");
             //  statement.executeUpdate("DROP TABLE IF EXISTS reviews;");
             //  statement.executeUpdate("DROP TABLE IF EXISTS saved_hotels;");
@@ -344,6 +346,7 @@ public class DatabaseHandler {
 
         String usersalt = encodeHex(saltBytes, 32);
         String passhash = getHash(newpass, usersalt);
+        String lastLogin = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         try (
                 PreparedStatement sql = connection.prepareStatement(REGISTER_SQL);
@@ -351,6 +354,7 @@ public class DatabaseHandler {
             sql.setString(1, newuser);
             sql.setString(2, passhash);
             sql.setString(3, usersalt);
+            sql.setString(4, lastLogin);
             sql.executeUpdate();
 
             status = Status.OK;
@@ -472,8 +476,9 @@ public class DatabaseHandler {
             statement.setString(2, passhash);
 
             ResultSet results = statement.executeQuery();
-            if (results.next())
+            if (results.next()) {
                 userId = results.getInt("userId");
+            }
 
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -481,6 +486,40 @@ public class DatabaseHandler {
         }
 
         return userId;
+    }
+
+    /**
+     * Retrives previous login time, and sets current time
+     *
+     * @param userId - id of user
+     */
+    public String updateLoginTime(int userId) {
+        String prevLogin = "";
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT lastLogin FROM users WHERE userId=?;"
+                );
+        ) {
+            statement.setInt(1, userId);
+            ResultSet results = statement.executeQuery();
+
+            if (results.next()) {
+                prevLogin = results.getString("lastLogin");
+
+                String lastLogin = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+                PreparedStatement statement2 = connection.prepareStatement(
+                        "UPDATE users SET lastLogin=? WHERE userId=?;"
+                );
+                statement2.setString(1, lastLogin);
+                statement2.setInt(2, userId);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+        }
+        return prevLogin;
     }
 
     /**

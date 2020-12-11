@@ -171,6 +171,17 @@ public class BaseServlet extends HttpServlet {
 		return null;
 	}
 
+	protected String getPrevLogin(HttpServletRequest request) {
+		Map<String, String> cookies = getCookieMap(request);
+
+		String login = cookies.get("login");
+		String prevLoginDate = cookies.get("prevLogin");
+		if ((login != null) && login.equals("true")) {
+			return prevLoginDate;
+		}
+		return "";
+	}
+
 	protected int getUserId(HttpServletRequest request) {
 		Map<String, String> cookies = getCookieMap(request);
 		String idString = cookies.get("id");
