@@ -26,6 +26,13 @@ public class SearchReviewServlet extends BaseServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        String name = getUsername(request);
+        if(name == null){
+            response.sendRedirect("/login");
+            return;
+        }
+
         PrintWriter out = response.getWriter();
         String word = request.getParameter("keyword");
         System.out.println("word: " + word);
@@ -46,17 +53,6 @@ public class SearchReviewServlet extends BaseServlet {
         out.println(writer.toString());
 
     }
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-
-
-
-    }
-
-
 
 
 }

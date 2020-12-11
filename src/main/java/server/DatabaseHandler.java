@@ -805,16 +805,16 @@ public class DatabaseHandler {
         return reviews;
     }
 
-    public void deleteAReviewByUsername(String name) {
+    public void deleteAReviewByReviewId(String reviewId) {
         try (
                 Connection connection = db.getConnection();
 
                 PreparedStatement sql = connection.prepareStatement(
                         "delete " +
-                                "from users " +
-                                "where username= ?;");
+                                "from reviews " +
+                                "where reviewId= ?;");
         ) {
-            sql.setString(1, name);
+            sql.setString(1, reviewId);
             sql.executeUpdate();
 
         } catch (SQLException ex) {

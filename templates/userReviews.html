@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Personl Reviews</title>
+    <title>Personal Reviews</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -25,10 +25,21 @@
 
 
 <body>
-<!--<div class="container pt-3 my-3 border justify-content-center">-->
-<!--    <h3>$hotel.getF()</h3>-->
-<!--    <h5>$hotel.getAd()</h5>-->
-<!--</div>-->
+<nav class="navbar navbar-expand-sm bg-light justify-content-center">
+
+    <ul class="navbar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link" href="http://localhost:8090/">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/login?logout" >Logout</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="http://localhost:8090/searchHotel">Users</a>
+        </li>
+    </ul>
+</nav>
 
 <div class="container pt-3 my-3 border" id="editReview" style="display:none">
     <h2>Edit Review: </h2>
@@ -68,7 +79,9 @@
             <th>text</th>
             <th>customer</th>
             <th>date</th>
-            <th></th>
+            <th>Edit</th>
+            <th>Delete</th>
+
         </tr>
         </thead>
         <tbody>
@@ -80,6 +93,7 @@
             <td>$review.getUserNickname()</td>
             <td>$review.getDate()</td>
             <td><button class="btn btn-primary" onclick="populateEditForm(&review.getReviewId(),$review.getRatingOverall(),'$review.getTitle()','$review.getReviewText()');">Edit</button></td>
+            <th><a href="http://localhost:8090/deleteAReview?reviewId=$review.getReviewId()" class="btn btn-danger" role="button">Delete</a></th>
         </tr>
         #end
         </tbody>

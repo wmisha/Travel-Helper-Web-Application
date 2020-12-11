@@ -13,25 +13,22 @@
 <body>
 
     <nav class="navbar navbar-expand-sm bg-light justify-content-center">
-        <!-- Brand/logo -->
-        <!--
-            <a class="navbar-brand" href="#">
-                <img src="$sf" alt="logo" style="width:40px;">
-            </a>
-        -->
-        <!-- Links -->
+
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Register</a>
+                    <a class="nav-link" href="http://localhost:8090/register">Register</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
+                    <a class="nav-link" href="http://localhost:8090/login">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Hotel</a>
+                    <a class="nav-link" href="/login?logout">Logout</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Reviews</a>
+                    <a class="nav-link" href="http://localhost:8090/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://localhost:8090/searchHotel">Users</a>
                 </li>
             </ul>
         </nav>
@@ -40,15 +37,15 @@
 <div class="container pt-3 my-3 border">
 
     <h1>Welcome to this Website!</h1>
-    <p>This part is inside a .container class.</p>
-    <p>The .container class provides a responsive fixed width container.</p>
+    <p>This website is a subset of the functionality of www.tripadvisor.com, where users can register, login,
+        search for hotels & reviews, view hotel information, write and edit hotel reviews, view nearby attractions or restaurants etc.
+        (see the list of features below). Note that this website will not allow the user to check availability or book hotels..</p>
+
     <a href="http://localhost:8090/register" class="btn btn-info" role="button">Register</a>
     <a href="http://localhost:8090/login" class="btn btn-info" role="button">Login</a>
     <a href="http://localhost:8090/login?logout" class="btn btn-info" role="button">Logout</a>
-    <a href="http://localhost:8090/searchHotel" class="btn btn-info" role="button">SearchHotels</a>
-    <a href="http://localhost:8090/searchReviews" class="btn btn-info" role="button">SearchReviews</a>
-    <button type="button" class="btn btn-outline-primary">Register</button>
-    <button type="button" class="btn btn-outline-success">Login</button>
+    <a href="http://localhost:8090/searchHotel" class="btn btn-info" role="button">Users</a>
+
 
     <br>
 </div>

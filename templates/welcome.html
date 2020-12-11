@@ -8,6 +8,26 @@
 </head>
 
 <body>
+<nav class="navbar navbar-expand-sm bg-light justify-content-center">
+
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="http://localhost:8090/">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="http://localhost:8090/register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="http://localhost:8090/login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/login?logout">Logout</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="http://localhost:8090/searchHotel">Users</a>
+        </li>
+    </ul>
+</nav>
 
     #if($name != "anonymous")
     <h1>Hello, $name! </h1>

@@ -60,6 +60,7 @@ public class CheckUserReviewsServlet extends BaseServlet {
             throws IOException {
 
         String reviewId = request.getParameter("reviewId");
+        System.out.println("In Edit page: " + reviewId);
         int rating = Integer.parseInt(request.getParameter("rating"));
         String title = request.getParameter("title");
         String text = request.getParameter("text");
@@ -68,31 +69,7 @@ public class CheckUserReviewsServlet extends BaseServlet {
         dbhandler.updateReview(reviewId, rating, title, text, date);
 
         response.sendRedirect("/checkUserReviews");
-//        PrintWriter out = response.getWriter();
-//
-//        String reviewId = dbhandler.getAlphaNumericString(11);
-//        System.out.println("reviewId: " + reviewId);
-//        String hotelId = request.getParameter("hotelId");
-//        System.out.println("hotelId:!!!!!!!!!!! " + hotelId);
-//        int rating = Integer.parseInt(request.getParameter("rating"));
-//        String title = request.getParameter("title");
-//        String text = request.getParameter("text");
-//        String customer = getUsername(request);
-//        System.out.println("customer: " + customer);
-//        String ex = "2016-07-11T19:25:29Z";
-//        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-//        System.out.println("date: " + date);
-//        int userId = dbhandler.findUerIdByUsername(customer);
-//        System.out.println("userId: " + userId);
-//
-//        if (title == null && text == null && customer == null) {
-//            response.sendRedirect("/hotelInfo");
-//            return;
-//        }
-//
-//        dbhandler.insertValuesToReviews(reviewId, hotelId, rating, title, text, customer, date, userId);
-//
-//        response.sendRedirect("/hotelInfo?hotelId=" + hotelId);
+
 
     }
 
