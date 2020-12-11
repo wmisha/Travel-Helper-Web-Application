@@ -22,6 +22,7 @@ public class Review  {
     private String hotelName;
     private String hotelAddress;
     private String date;
+    private int userId;
 
     public Review(String hotelId, String reviewId, int ratingOverall,
                   String title, String reviewText, String reviewSubmissionTime,String userNickname) {
@@ -59,6 +60,15 @@ public class Review  {
         this.reviewText = reviewText;
         this.userNickname = customer;
         this.date = date;
+    }
+    public Review(String reviewId,int rating,String title,String reviewText,String customer,String date,int userId){
+        this.reviewId = reviewId;
+        this.ratingOverall = rating;
+        this.title = title;
+        this.reviewText = reviewText;
+        this.userNickname = customer;
+        this.date = date;
+        this.userId = userId;
     }
 
     public String getHotelName(){

@@ -1,61 +1,59 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <title>Welcome Page</title>
+    <title>HotelSearch</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-sm bg-light justify-content-center">
-    <!-- Brand/logo -->
+#if($name != "anonymous")
+<h3>Hello, $name! </h3>
+#end
+<div class="container pt-3 my-3 border justify-content-center">
+<p>Please enter city name and keyword to search hotels:</p>
 
-        <a class="navbar-brand" href="#">
-            <img src="sf.jpg" alt="logo" style="width:40px;">
-        </a>
-
-    <!-- Links -->
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" href="#">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Login</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Hotel</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Reviews</a>
-        </li>
-    </ul>
-</nav>
-
-
-<div class="container pt-3 my-3 border">
-
-    <h1>Welcome to this Website!</h1>
-    <p>This part is inside a .container class.</p>
-    <p>The .container class provides a responsive fixed width container.</p>
-    <a href="http://localhost:8090/register" class="btn btn-info" role="button">Register</a>
-    <a href="http://localhost:8090/login" class="btn btn-info" role="button">Login</a>
-    <a href="http://localhost:8090/login?logout" class="btn btn-info" role="button">Logout</a>
-    <button type="button" class="btn btn-outline-primary">Register</button>
-    <button type="button" class="btn btn-outline-success">Login</button>
-
-
-    <br>
+<form action="/searchHotel" method="post">
+    <table border="1">
+        <tr>
+            <td>City:</td>
+            <td><input type="text" size="30" name="city" ></td>
+        </tr>
+        <tr>
+            <td>keyword:</td>
+            <td><input type="text" size="30" name="keyword" ></td>
+        </tr>
+    </table>
+    <p><input type="submit" value="Enter"></p>
+</form>
 </div>
 
-<div class="container pt-3 my-3 ">
-    <img src="hotel.jpeg" class="rounded" alt="Cinque Terre" width="450" height="350">
+<div class="container pt-3 my-3 border justify-content-center">
+<p>Please enter keyword to search reviews:</p>
+
+<form action="/searchReview" method="get">
+    <table border="1">
+        <tr>
+            <td>keyword:</td>
+            <td><input type="text" size="30" name="keyword" ></td>
+        </tr>
+    </table>
+    <p><input type="submit" value="Enter"></p>
+</form>
 </div>
 
+<div class="container pt-3 my-3 border justify-content-center">
+    <p>Check your own reviews:</p>
+
+    <form action="/checkUserReviews?username=$name" method="get">
+
+        <p><input type="submit" value="Go Check"></p>
+    </form>
+</div>
 </body>
 </html>
+
+
 

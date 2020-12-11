@@ -20,8 +20,6 @@ import java.util.List;
 
 public class HotelServlet extends BaseServlet {
 
-    protected static final DatabaseHandler dbHandler = DatabaseHandler.getInstance();
-
 
     /**
      * This method corresponding with the request's Get method.
@@ -40,12 +38,12 @@ public class HotelServlet extends BaseServlet {
         String name = getUsername(request);
         String hotelId = request.getParameter("hotelId");
         System.out.println("hotelId: ..........." + hotelId);
-        
+
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
         Template template = ve.getTemplate("templates/hotel.html");
 
-        Hotel hotel = dbHandler.findOneHotelByHotelId(hotelId);
+        Hotel hotel = dbhandler.findOneHotelByHotelId(hotelId);
         ArrayList<Review> reviews = dbhandler.findReviewsByHotelId(hotelId);
         context.put("hotel", hotel);
         context.put("reviews", reviews);
@@ -69,7 +67,7 @@ public class HotelServlet extends BaseServlet {
 
         PrintWriter out = response.getWriter();
 
-        String reviewId = dbHandler.getAlphaNumericString(11);
+        String reviewId = dbhandler.getAlphaNumericString(11);
         System.out.println("reviewId: " + reviewId);
         String hotelId = request.getParameter("hotelId");
         System.out.println("hotelId:!!!!!!!!!!! " + hotelId);
@@ -81,7 +79,7 @@ public class HotelServlet extends BaseServlet {
         String ex = "2016-07-11T19:25:29Z";
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         System.out.println("date: " + date);
-        int userId = dbHandler.findUerIdByUsername(customer);
+        int userId = dbhandler.findUerIdByUsername(customer);
         System.out.println("userId: " + userId);
 
         if (title == null && text == null && customer == null) {
@@ -89,7 +87,7 @@ public class HotelServlet extends BaseServlet {
             return;
         }
 
-        dbHandler.insertValuesToReviews(reviewId, hotelId, rating, title, text, customer, date, userId);
+        dbhandler.insertValuesToReviews(reviewId, hotelId, rating, title, text, customer, date, userId);
 
         response.sendRedirect("/hotelInfo?hotelId=" + hotelId);
 

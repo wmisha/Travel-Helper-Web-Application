@@ -1,23 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hotel</title>
+    <title>Personl Reviews</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>-->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function populateEditForm(reviewId, rating, title, text) {
+            // Populate reviewId, title, and text fields
+            document.getElementById("reviewId").value = reviewId;
+            document.getElementById("rating").value = rating;
+            document.getElementById("title").value = title;
+            document.getElementById("text").value = text;
+
+            // Show form
+            document.getElementById("editReview").style.display = 'block';
+        }
+    </script>
 </head>
 
 
 <body>
-<div class="container pt-3 my-3 border justify-content-center">
-    <h3>$hotel.getF()</h3>
-    <h5>$hotel.getAd()</h5>
-</div>
-<div class="container pt-3 my-3 border">
-    <form action="/hotelInfo?hotelId=$hotelId" method="post">
+<!--<div class="container pt-3 my-3 border justify-content-center">-->
+<!--    <h3>$hotel.getF()</h3>-->
+<!--    <h5>$hotel.getAd()</h5>-->
+<!--</div>-->
+
+<div class="container pt-3 my-3 border" id="editReview" style="display:none">
+    <h2>Edit Review: </h2>
+    <form action="" method="post">
+        <input type="hidden" id="reviewId" name="reviewId" />
         <div class="form-group">
             <label for="rating">Rating (select one):</label>
             <select class="form-control" id="rating" name="rating">
@@ -37,14 +53,13 @@
             <input type="text" class="form-control" id="text" placeholder="Enter text" name="text">
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Update Review</button>
         </div>
     </form>
 </div>
 
 <div class="container pt-3 my-3 border">
     <h2>Reviews: </h2>
-
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -53,6 +68,7 @@
             <th>text</th>
             <th>customer</th>
             <th>date</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -63,7 +79,7 @@
             <td>$review.getReviewText()</td>
             <td>$review.getUserNickname()</td>
             <td>$review.getDate()</td>
-
+            <td><button class="btn btn-primary" onclick="populateEditForm(&review.getReviewId(),$review.getRatingOverall(),'$review.getTitle()','$review.getReviewText()');">Edit</button></td>
         </tr>
         #end
         </tbody>
@@ -75,7 +91,7 @@
 
 
 
-<p style="font-size: 10pt; font-style: italic; center">Last updated at $date.</p>
+<!--<p style="font-size: 10pt; font-style: italic; center">Last updated at $date.</p>-->
 
 </body>
 </html>

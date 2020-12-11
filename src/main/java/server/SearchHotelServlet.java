@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class SearchHotelServlet extends BaseServlet {
-    protected static final DatabaseHandler dbHandler = DatabaseHandler.getInstance();
+
 
 
     /**
@@ -39,7 +39,7 @@ public class SearchHotelServlet extends BaseServlet {
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();
-        Template template = ve.getTemplate("templates/searchHotelReview.html");
+        Template template = ve.getTemplate("templates/user.html");
 
         context.put("name", name);
         //  context.put("date",date);
@@ -73,7 +73,7 @@ public class SearchHotelServlet extends BaseServlet {
         }
         if (keyword == null)
             keyword = "";
-        ArrayList<Hotel> hotels = dbHandler.findHotels(city, keyword);
+        ArrayList<Hotel> hotels = dbhandler.findHotels(city, keyword);
 
         VelocityEngine ve = (VelocityEngine) request.getServletContext().getAttribute("templateEngine");
         VelocityContext context = new VelocityContext();

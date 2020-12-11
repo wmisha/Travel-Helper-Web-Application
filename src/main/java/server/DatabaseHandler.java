@@ -632,7 +632,8 @@ public class DatabaseHandler {
         }
         return hotels;
     }
-    public ArrayList<Review> findReviews(String keyword){
+
+    public ArrayList<Review> findReviews(String keyword) {
         ArrayList<Review> reviews = new ArrayList<>();
         try (
                 Connection connection = db.getConnection();
@@ -663,7 +664,8 @@ public class DatabaseHandler {
         return reviews;
 
     }
-    public Hotel findOneHotelByHotelId(String hotelId){
+
+    public Hotel findOneHotelByHotelId(String hotelId) {
         Hotel hotel = new Hotel();
         try (
                 Connection connection = db.getConnection();
@@ -688,7 +690,8 @@ public class DatabaseHandler {
         return hotel;
 
     }
-    public ArrayList<Review> findReviewsByHotelId(String hotelId){
+
+    public ArrayList<Review> findReviewsByHotelId(String hotelId) {
         ArrayList<Review> reviews = new ArrayList<>();
         try (
                 Connection connection = db.getConnection();
@@ -718,7 +721,8 @@ public class DatabaseHandler {
         return reviews;
 
     }
-    public int findUerIdByUsername(String name){
+
+    public int findUerIdByUsername(String name) {
         int userId = 0;
         try (
                 Connection connection = db.getConnection();
@@ -731,7 +735,7 @@ public class DatabaseHandler {
             ResultSet resultSet = sql.executeQuery();
 
             while (resultSet.next()) {
-               userId = resultSet.getInt("userId");
+                userId = resultSet.getInt("userId");
             }
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -740,8 +744,8 @@ public class DatabaseHandler {
         }
         return userId;
     }
-    public String getAlphaNumericString(int n)
-    {
+
+    public String getAlphaNumericString(int n) {
 
         // chose a Character random from this String
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -756,7 +760,7 @@ public class DatabaseHandler {
             // generate a random number between
             // 0 to AlphaNumericString variable length
             int index
-                    = (int)(AlphaNumericString.length()
+                    = (int) (AlphaNumericString.length()
                     * Math.random());
 
             // add Character one by one in end of sb
@@ -768,4 +772,83 @@ public class DatabaseHandler {
     }
 
 
+    public ArrayList<Review> findReviewByUserId(int userId) {
+        ArrayList<Review> reviews = new ArrayList<>();
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "select reviewId,rating,title, reviewText, customer, date, userId " +
+                                "from reviews " +
+                                "where userId= ?;");
+        ) {
+
+            sql.setInt(1, userId);
+            ResultSet resultSet = sql.executeQuery();
+
+            while (resultSet.next()) {
+                reviews.add(new Review(
+                        resultSet.getString("reviewId"),
+                        resultSet.getInt("rating"),
+                        resultSet.getString("title"),
+                        resultSet.getString("reviewText"),
+                        resultSet.getString("customer"),
+                        resultSet.getString("date"),
+                        resultSet.getInt("userId")
+
+                ));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+        return reviews;
+    }
+
+    public void deleteAReviewByUsername(String name) {
+        try (
+                Connection connection = db.getConnection();
+
+                PreparedStatement sql = connection.prepareStatement(
+                        "delete " +
+                                "from users " +
+                                "where username= ?;");
+        ) {
+            sql.setString(1, name);
+            sql.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+    }
+
+    public void updateAReviewByUsername(String name) {
+
+    }
+
+    public Status updateReview(String reviewId, int rating, String title, String text, String date) {
+        Status status = Status.ERROR;
+        log.debug("Updating " + reviewId + ".");
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "UPDATE reviews SET rating=?, title=?, text=?, date=? WHERE reviewId=?;"
+                );
+        ) {
+            sql.setInt(1, rating);
+            sql.setString(2, title);
+            sql.setString(3, text);
+            sql.setString(4, date);
+            sql.setString(5, reviewId);
+            sql.executeUpdate();
+            status = Status.OK;
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+        return status;
+    }
 }

@@ -25,6 +25,7 @@ public class BackEndServer {
         context1.addServlet(new ServletHolder(new SearchHotelServlet()), "/searchHotel");
         context1.addServlet(new ServletHolder(new HotelServlet()), "/hotelInfo");
         context1.addServlet(new ServletHolder(new SearchReviewServlet()), "/searchReview");
+        context1.addServlet(new ServletHolder(new CheckUserReviewsServlet()), "/checkUserReviews");
 
 
         // initialize Velocity
