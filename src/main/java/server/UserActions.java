@@ -41,5 +41,15 @@ public class UserActions extends BaseServlet {
             );
             response.sendRedirect(visitedLink);
         }
+
+        if (request.getParameter("clearSavedHotels") != null) {
+            dbhandler.clearSavedHotels(getUserId(request));
+            response.sendRedirect("/user");
+        }
+
+        if (request.getParameter("clearVisitedLinks") != null) {
+            dbhandler.clearVisitedLinks(getUserId(request));
+            response.sendRedirect("/user");
+        }
     }
 }

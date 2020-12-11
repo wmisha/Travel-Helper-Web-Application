@@ -872,6 +872,38 @@ public class DatabaseHandler {
         }
     }
 
+    public void clearSavedHotels(int userId) {
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "delete from saved_hotels where userId=?;"
+                );
+        ) {
+            sql.setInt(1, userId);
+            sql.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+    }
+
+    public void clearVisitedLinks(int userId) {
+        try (
+                Connection connection = db.getConnection();
+                PreparedStatement sql = connection.prepareStatement(
+                        "delete from visited_links where userId=?;"
+                );
+        ) {
+            sql.setInt(1, userId);
+            sql.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+            log.debug(Status.SQL_EXCEPTION, ex);
+        }
+    }
+
     public ArrayList<Hotel> findSavedHotels(int userId) {
         ArrayList<Hotel> hotels = new ArrayList<>();
         try (
